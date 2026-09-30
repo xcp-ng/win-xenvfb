@@ -6,7 +6,7 @@ extern "C" {
 
 #include "device.hpp"
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DEVICE)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
     FbAddDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject, OUT_PPVOID MiniportDeviceContext) {
     PAGED_CODE();
@@ -18,7 +18,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DEVICE)
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbStartDevice(
         IN_CONST_PVOID MiniportDeviceContext,
         IN_PDXGK_START_INFO DxgkStartInfo,
@@ -38,21 +38,21 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbStopDevice(IN_CONST_PVOID MiniportDeviceContext) {
     PAGED_CODE();
     UNREFERENCED_PARAMETER(MiniportDeviceContext);
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_REMOVE_DEVICE)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_REMOVE_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbRemoveDevice(IN_CONST_PVOID MiniportDeviceContext) {
     PAGED_CODE();
     UNREFERENCED_PARAMETER(MiniportDeviceContext);
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_DISPATCH_IO_REQUEST)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_DISPATCH_IO_REQUEST)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbDispatchIoRequest(
         IN_CONST_PVOID MiniportDeviceContext,
         IN_ULONG VidPnSourceId,
@@ -77,7 +77,7 @@ _Function_class_DXGK_(DXGKDDI_DPC_ROUTINE) _IRQL_requires_DXGK_(DISPATCH_LEVEL) 
     UNREFERENCED_PARAMETER(MiniportDeviceContext);
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_CHILD_RELATIONS)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_CHILD_RELATIONS)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbQueryChildRelations(
         IN_CONST_PVOID MiniportDeviceContext,
         _Inout_updates_bytes_(ChildRelationsSize) PDXGK_CHILD_DESCRIPTOR ChildRelations,
@@ -89,7 +89,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_CHILD_REL
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_CHILD_STATUS)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_CHILD_STATUS)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbQueryChildStatus(
         IN_CONST_PVOID MiniportDeviceContext,
         INOUT_PDXGK_CHILD_STATUS ChildStatus,
@@ -101,7 +101,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_CHILD_STA
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_DEVICE_DESCRIPTOR)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_DEVICE_DESCRIPTOR)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbQueryDeviceDescriptor(
         IN_CONST_PVOID MiniportDeviceContext,
         IN_ULONG ChildUid,
@@ -113,7 +113,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERY_DEVICE_DE
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SET_POWER_STATE)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_SET_POWER_STATE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbSetPowerState(
         IN_CONST_PVOID MiniportDeviceContext,
         IN_ULONG DeviceUid,
@@ -131,11 +131,12 @@ _Function_class_DXGK_(DXGKDDI_RESET_DEVICE) VOID FbResetDevice(IN_CONST_PVOID Mi
     UNREFERENCED_PARAMETER(MiniportDeviceContext);
 }
 
-DECLSPEC_PAGED_CODE _Function_class_DXGK_(DXGKDDI_UNLOAD) _IRQL_requires_DXGK_(PASSIVE_LEVEL) VOID FbUnload(VOID) {
+DECLSPEC_PAGED_CODE EXTERN_C _Function_class_DXGK_(DXGKDDI_UNLOAD) _IRQL_requires_DXGK_(PASSIVE_LEVEL) VOID
+    FbUnload(VOID) {
     PAGED_CODE();
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERYADAPTERINFO)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERYADAPTERINFO)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbQueryAdapterInfo(IN_CONST_HANDLE hAdapter, IN_CONST_PDXGKARG_QUERYADAPTERINFO pQueryAdapterInfo) {
     PAGED_CODE();
@@ -144,7 +145,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERYADAPTERINF
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SETPOINTERPOSITION)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_SETPOINTERPOSITION)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbSetPointerPosition(IN_CONST_HANDLE hAdapter, IN_CONST_PDXGKARG_SETPOINTERPOSITION pSetPointerPosition) {
     PAGED_CODE();
@@ -153,7 +154,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SETPOINTERPOSIT
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SETPOINTERSHAPE)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_SETPOINTERSHAPE)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbSetPointerShape(IN_CONST_HANDLE hAdapter, IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape) {
     PAGED_CODE();
@@ -162,7 +163,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SETPOINTERSHAPE
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ISSUPPORTEDVIDPN)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ISSUPPORTEDVIDPN)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbIsSupportedVidPn(IN_CONST_HANDLE hAdapter, INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn) {
     PAGED_CODE();
@@ -171,7 +172,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ISSUPPORTEDVIDP
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_RECOMMENDFUNCTIONALVIDPN)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_RECOMMENDFUNCTIONALVIDPN)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY FbRecommendFunctionalVidPn(
         IN_CONST_HANDLE hAdapter,
         IN_CONST_PDXGKARG_RECOMMENDFUNCTIONALVIDPN_CONST pRecommendFunctionalVidPn) {
@@ -181,7 +182,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_RECOMMENDFUNCTI
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ENUMVIDPNCOFUNCMODALITY)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ENUMVIDPNCOFUNCMODALITY)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY FbEnumVidPnCofuncModality(
         IN_CONST_HANDLE hAdapter,
         IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality) {
@@ -191,7 +192,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ENUMVIDPNCOFUNC
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SETVIDPNSOURCEVISIBILITY)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_SETVIDPNSOURCEVISIBILITY)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY FbSetVidPnSourceVisibility(
         IN_CONST_HANDLE hAdapter,
         IN_CONST_PDXGKARG_SETVIDPNSOURCEVISIBILITY pSetVidPnSourceVisibility) {
@@ -201,7 +202,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_SETVIDPNSOURCEV
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_COMMITVIDPN)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_COMMITVIDPN)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbCommitVidPn(IN_CONST_HANDLE hAdapter, IN_CONST_PDXGKARG_COMMITVIDPN_CONST pCommitVidPn) {
     PAGED_CODE();
@@ -210,7 +211,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_COMMITVIDPN)
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_UPDATEACTIVEVIDPNPRESENTPATH)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_UPDATEACTIVEVIDPNPRESENTPATH)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY FbUpdateActiveVidPnPresentPath(
         IN_CONST_HANDLE hAdapter,
         IN_CONST_PDXGKARG_UPDATEACTIVEVIDPNPRESENTPATH_CONST pUpdateActiveVidPnPresentPath) {
@@ -220,7 +221,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_UPDATEACTIVEVID
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_RECOMMENDMONITORMODES)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_RECOMMENDMONITORMODES)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY FbRecommendMonitorModes(
         IN_CONST_HANDLE hAdapter,
         IN_CONST_PDXGKARG_RECOMMENDMONITORMODES_CONST pRecommendMonitorModes) {
@@ -230,7 +231,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_RECOMMENDMONITO
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERYVIDPNHWCAPABILITY)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERYVIDPNHWCAPABILITY)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbQueryVidPnHWCapability(IN_CONST_HANDLE i_hAdapter, INOUT_PDXGKARG_QUERYVIDPNHWCAPABILITY io_pVidPnHWCaps) {
     PAGED_CODE();
@@ -239,7 +240,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_QUERYVIDPNHWCAP
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_PRESENTDISPLAYONLY)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_PRESENTDISPLAYONLY)
     _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS APIENTRY
     FbPresentDisplayOnly(IN_CONST_HANDLE hAdapter, IN_CONST_PDXGKARG_PRESENT_DISPLAYONLY pPresentDisplayOnly) {
     PAGED_CODE();
@@ -248,7 +249,8 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_PRESENTDISPLAYO
     return STATUS_NOT_IMPLEMENTED;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE_AND_RELEASE_POST_DISPLAY_OWNERSHIP)
+DECLSPEC_PAGED_CODE EXTERN_C _Check_return_
+_Function_class_DXGK_(DXGKDDI_STOP_DEVICE_AND_RELEASE_POST_DISPLAY_OWNERSHIP)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbStopDeviceAndReleasePostDisplayOwnership(
         _In_ PVOID MiniportDeviceContext,
         _In_ D3DDDI_VIDEO_PRESENT_TARGET_ID TargetId,
@@ -316,17 +318,17 @@ DECLSPEC_PAGED_CODE EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObje
         .DxgkDdiQueryChildStatus = FbQueryChildStatus,
         .DxgkDdiQueryDeviceDescriptor = FbQueryDeviceDescriptor,
         .DxgkDdiSetPowerState = FbSetPowerState,
-        // .DxgkDdiNotifyAcpiEvent = FbNotifyAcpiEvent,
+        // .DxgkDdiNotifyAcpiEvent
         .DxgkDdiResetDevice = FbResetDevice,
         .DxgkDdiUnload = FbUnload,
-        // .DxgkDdiQueryInterface = FbQueryInterface,
-        // .DxgkDdiControlEtwLogging = FbControlEtwLogging,
+        // .DxgkDdiQueryInterface
+        // .DxgkDdiControlEtwLogging
         .DxgkDdiQueryAdapterInfo = FbQueryAdapterInfo,
-        // .DxgkDdiSetPalette = FbSetPalette,
+        // .DxgkDdiSetPalette
         .DxgkDdiSetPointerPosition = FbSetPointerPosition,
         .DxgkDdiSetPointerShape = FbSetPointerShape,
-        // .DxgkDdiEscape = FbEscape,
-        // .DxgkDdiCollectDbgInfo = FbCollectDbgInfo,
+        // .DxgkDdiEscape
+        // .DxgkDdiCollectDbgInfo
         .DxgkDdiIsSupportedVidPn = FbIsSupportedVidPn,
         .DxgkDdiRecommendFunctionalVidPn = FbRecommendFunctionalVidPn,
         .DxgkDdiEnumVidPnCofuncModality = FbEnumVidPnCofuncModality,
