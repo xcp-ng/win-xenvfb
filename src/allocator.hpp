@@ -35,12 +35,12 @@ WI_NODISCARD static inline UniqueTaggedPool<T, tag> MakeUniqueTaggedPoolZero(Arg
     return UniqueTaggedPool<T, tag>{object};
 }
 
-static constexpr ULONG XenfbTag = 'bfnX';
+static constexpr ULONG XenvfbTag = 'bfvX';
 
 template <typename T>
-using UniqueXenfb = UniqueTaggedPool<T, XenfbTag>;
+using UniqueXenvfb = UniqueTaggedPool<T, XenvfbTag>;
 
 template <typename T, typename... Args>
-WI_NODISCARD static inline UniqueXenfb<T> MakeUniqueXenfb(Args &&...args) {
-    return MakeUniqueTaggedPoolZero<T, XenfbTag>(wistd::forward<Args>(args)...);
+WI_NODISCARD static inline UniqueXenvfb<T> MakeUniqueXenvfb(Args &&...args) {
+    return MakeUniqueTaggedPoolZero<T, XenvfbTag>(wistd::forward<Args>(args)...);
 }

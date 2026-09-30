@@ -3,7 +3,7 @@
     <Platform Name="ARM64" />
     <Platform Name="x64" />
   </Configurations>
-  <Project Path="xenfb.vcxproj">
+  <Project Path="xenvfb.vcxproj" Id="e596ff65-0fa5-16a2-23d7-018fcbf36322">
     <Deploy />
   </Project>
 </Solution>

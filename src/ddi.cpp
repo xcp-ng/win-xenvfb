@@ -19,7 +19,7 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DE
         return STATUS_INVALID_PARAMETER;
     }
 
-    auto device = MakeUniqueXenfb<FbDevice>();
+    auto device = MakeUniqueXenvfb<VfbDevice>();
     if (!device) {
         return STATUS_NO_MEMORY;
     }
@@ -63,7 +63,7 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_D
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_REMOVE_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbRemoveDevice(IN_CONST_PVOID MiniportDeviceContext) {
     PAGED_CODE();
-    TaggedPoolDeleter<FbDevice, XenfbTag>{}(static_cast<FbDevice *>(MiniportDeviceContext));
+    TaggedPoolDeleter<VfbDevice, XenvfbTag>{}(static_cast<VfbDevice *>(MiniportDeviceContext));
     return STATUS_SUCCESS;
 }
 

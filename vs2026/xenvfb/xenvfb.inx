@@ -5,7 +5,7 @@ Signature = "$WINDOWS NT$"
 Class = Display
 ClassGUID = {4d36e968-e325-11ce-bfc1-08002be10318}
 Provider = %ManufacturerName%
-CatalogFile = xenfb.cat
+CatalogFile = xenvfb.cat
 DriverVer = ; TODO: set DriverVer in stampinf property pages
 PnpLockdown = 1
 
@@ -16,7 +16,7 @@ DefaultDestDir = 13
 1 = %DiskName%,,,""
 
 [SourceDisksFiles]
-xenfb.sys = 1,,
+xenvfb.sys = 1,,
 
 ;*****************************************
 ; Install Section
@@ -26,35 +26,35 @@ xenfb.sys = 1,,
 %ManufacturerName% = Standard,NT$ARCH$.10.0...16299 ; %13% support introduced in build 16299
 
 [Standard.NT$ARCH$.10.0...16299]
-%xenfb.DeviceDesc% = xenfb_Device, Root\xenfb ; TODO: edit hw-id
+%xenvfb.DeviceDesc% = xenvfb_Device, Root\xenvfb ; TODO: edit hw-id
 
-[xenfb_Device.NT]
+[xenvfb_Device.NT]
 CopyFiles = File_Copy
 
 [File_Copy]
-xenfb.sys
+xenvfb.sys
 
 ;-------------- Service installation
-[xenfb_Device.NT.Services]
-AddService = xenfb,%SPSVCINST_ASSOCSERVICE%, xenfb_Service_Inst
+[xenvfb_Device.NT.Services]
+AddService = xenvfb,%SPSVCINST_ASSOCSERVICE%, xenvfb_Service_Inst
 
-; -------------- xenfb driver install sections
-[xenfb_Service_Inst]
-DisplayName = %xenfb.SVCDESC%
+; -------------- xenvfb driver install sections
+[xenvfb_Service_Inst]
+DisplayName = %xenvfb.SVCDESC%
 ServiceType = 1 ; SERVICE_KERNEL_DRIVER
 StartType = 3 ; SERVICE_DEMAND_START
 ErrorControl = 1 ; SERVICE_ERROR_NORMAL
-ServiceBinary = %13%\xenfb.sys
+ServiceBinary = %13%\xenvfb.sys
 
-[xenfb_Device.NT.Wdf]
-KmdfService = xenfb, xenfb_wdfsect
+[xenvfb_Device.NT.Wdf]
+KmdfService = xenvfb, xenvfb_wdfsect
 
-[xenfb_wdfsect]
+[xenvfb_wdfsect]
 KmdfLibraryVersion = $KMDFVERSION$
 
 [Strings]
 SPSVCINST_ASSOCSERVICE = 0x00000002
 ManufacturerName = "<Your manufacturer name>" ; TODO: Replace with your manufacturer name
-DiskName = "xenfb Installation Disk"
-xenfb.DeviceDesc = "xenfb Device"
-xenfb.SVCDESC = "xenfb Service"
+DiskName = "xenvfb Installation Disk"
+xenvfb.DeviceDesc = "xenvfb Device"
+xenvfb.SVCDESC = "xenvfb Service"

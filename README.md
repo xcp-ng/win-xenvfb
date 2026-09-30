@@ -1,9 +1,9 @@
-XenFb - The Xen Paravirtual Display Driver for Windows
-======================================================
+XenVfb - The Xen Paravirtual Display Driver for Windows
+=======================================================
 
-The XenFb package consists of a single device driver:
+The XenVfb package consists of a single device driver:
 
-* xenfb.sys is a kernel-mode display-only driver which attaches to a virtual
+* xenvfb.sys is a kernel-mode display-only driver which attaches to a virtual
   device created by XenBus and exposes virtual monitors. It is also a protocol
   driver for the fbif wire protocol (see include\xen\io\fbif.h).
 

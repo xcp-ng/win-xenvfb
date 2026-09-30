@@ -19,7 +19,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="xenfb.inx">
+    <Inf Include="xenvfb.inx">
       <Filter>Driver Files</Filter>
     </Inf>
   </ItemGroup>
