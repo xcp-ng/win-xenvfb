@@ -321,7 +321,7 @@ DECLSPEC_PAGED_CODE EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObje
     PAGED_CODE();
 
     KMDDOD_INITIALIZATION_DATA InitialData{
-        .Version = DXGKDDI_INTERFACE_VERSION_WIN8,
+        .Version = DXGKDDI_INTERFACE_VERSION,
         .DxgkDdiAddDevice = FbAddDevice,
         .DxgkDdiStartDevice = FbStartDevice,
         .DxgkDdiStopDevice = FbStopDevice,
