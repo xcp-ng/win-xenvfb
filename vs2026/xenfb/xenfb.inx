@@ -1,0 +1,60 @@
+; SPDX-License-Identifier: BSD-2-Clause
+
+[Version]
+Signature = "$WINDOWS NT$"
+Class = Display
+ClassGUID = {4d36e968-e325-11ce-bfc1-08002be10318}
+Provider = %ManufacturerName%
+CatalogFile = xenfb.cat
+DriverVer = ; TODO: set DriverVer in stampinf property pages
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+xenfb.sys = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName% = Standard,NT$ARCH$.10.0...16299 ; %13% support introduced in build 16299
+
+[Standard.NT$ARCH$.10.0...16299]
+%xenfb.DeviceDesc% = xenfb_Device, Root\xenfb ; TODO: edit hw-id
+
+[xenfb_Device.NT]
+CopyFiles = File_Copy
+
+[File_Copy]
+xenfb.sys
+
+;-------------- Service installation
+[xenfb_Device.NT.Services]
+AddService = xenfb,%SPSVCINST_ASSOCSERVICE%, xenfb_Service_Inst
+
+; -------------- xenfb driver install sections
+[xenfb_Service_Inst]
+DisplayName = %xenfb.SVCDESC%
+ServiceType = 1 ; SERVICE_KERNEL_DRIVER
+StartType = 3 ; SERVICE_DEMAND_START
+ErrorControl = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary = %13%\xenfb.sys
+
+[xenfb_Device.NT.Wdf]
+KmdfService = xenfb, xenfb_wdfsect
+
+[xenfb_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "<Your manufacturer name>" ; TODO: Replace with your manufacturer name
+DiskName = "xenfb Installation Disk"
+xenfb.DeviceDesc = "xenfb Device"
+xenfb.SVCDESC = "xenfb Service"
