@@ -136,6 +136,7 @@
     <ClCompile Include="..\..\src\device.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\allocator.hpp" />
     <ClInclude Include="..\..\src\device.hpp" />
   </ItemGroup>
   <ItemGroup>

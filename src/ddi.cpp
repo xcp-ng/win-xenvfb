@@ -4,6 +4,9 @@ extern "C" {
 #include <dispmprt.h>
 }
 
+#include <wil/result_macros.h>
+
+#include "allocator.hpp"
 #include "device.hpp"
 
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DEVICE)
@@ -12,10 +15,22 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DE
     PAGED_CODE();
     UNREFERENCED_PARAMETER(PhysicalDeviceObject);
 
-    if (MiniportDeviceContext != nullptr) {
-        *MiniportDeviceContext = nullptr;
+    if (!MiniportDeviceContext) {
+        return STATUS_INVALID_PARAMETER;
     }
-    return STATUS_NOT_IMPLEMENTED;
+
+    auto device = MakeUniqueXenfb<FbDevice>();
+    if (!device) {
+        return STATUS_NO_MEMORY;
+    }
+
+    auto status = device->AddDevice(PhysicalDeviceObject);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    *MiniportDeviceContext = static_cast<PVOID>(device.release());
+    return STATUS_SUCCESS;
 }
 
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
@@ -48,8 +63,8 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_D
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_REMOVE_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbRemoveDevice(IN_CONST_PVOID MiniportDeviceContext) {
     PAGED_CODE();
-    UNREFERENCED_PARAMETER(MiniportDeviceContext);
-    return STATUS_NOT_IMPLEMENTED;
+    TaggedPoolDeleter<FbDevice, XenfbTag>{}(static_cast<FbDevice *>(MiniportDeviceContext));
+    return STATUS_SUCCESS;
 }
 
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_DISPATCH_IO_REQUEST)
