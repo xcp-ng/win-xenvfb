@@ -1,11 +1,4 @@
-extern "C" {
-#include <ntddk.h>
-
-#include <dispmprt.h>
-}
-
-#include <wil/result_macros.h>
-
+#include "common.hpp"
 #include "allocator.hpp"
 #include "device.hpp"
 
@@ -13,20 +6,15 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DE
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
     FbAddDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject, OUT_PPVOID MiniportDeviceContext) {
     PAGED_CODE();
-    UNREFERENCED_PARAMETER(PhysicalDeviceObject);
 
     if (!MiniportDeviceContext) {
         return STATUS_INVALID_PARAMETER;
     }
+    *MiniportDeviceContext = nullptr;
 
-    auto device = MakeUniqueXenvfb<VfbDevice>();
+    auto device = MakeUniqueVfb<VfbDevice>(PhysicalDeviceObject);
     if (!device) {
         return STATUS_NO_MEMORY;
-    }
-
-    auto status = device->AddDevice(PhysicalDeviceObject);
-    if (!NT_SUCCESS(status)) {
-        return status;
     }
 
     *MiniportDeviceContext = static_cast<PVOID>(device.release());
@@ -41,16 +29,13 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_START_
         OUT_PULONG NumberOfVideoPresentSources,
         OUT_PULONG NumberOfChildren) {
     PAGED_CODE();
-    UNREFERENCED_PARAMETER(MiniportDeviceContext);
-    UNREFERENCED_PARAMETER(DxgkStartInfo);
-    UNREFERENCED_PARAMETER(DxgkInterface);
-    if (NumberOfVideoPresentSources != nullptr) {
-        *NumberOfVideoPresentSources = 0;
+
+    if (!MiniportDeviceContext) {
+        return STATUS_INVALID_PARAMETER;
     }
-    if (NumberOfChildren != nullptr) {
-        *NumberOfChildren = 0;
-    }
-    return STATUS_NOT_IMPLEMENTED;
+
+    auto device = static_cast<VfbDevice *>(MiniportDeviceContext);
+    return device->StartDevice(DxgkStartInfo, DxgkInterface, NumberOfVideoPresentSources, NumberOfChildren);
 }
 
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE)

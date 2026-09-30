@@ -1,10 +1,6 @@
 #pragma once
 
-extern "C" {
-#include <ntddk.h>
-}
-
-#include <wil/resource.h>
+#include "common.hpp"
 
 template <typename T, ULONG tag>
 struct TaggedPoolDeleter {
@@ -38,9 +34,9 @@ WI_NODISCARD static inline UniqueTaggedPool<T, tag> MakeUniqueTaggedPoolZero(Arg
 static constexpr ULONG XenvfbTag = 'bfvX';
 
 template <typename T>
-using UniqueXenvfb = UniqueTaggedPool<T, XenvfbTag>;
+using UniqueVfb = UniqueTaggedPool<T, XenvfbTag>;
 
 template <typename T, typename... Args>
-WI_NODISCARD static inline UniqueXenvfb<T> MakeUniqueXenvfb(Args &&...args) {
+WI_NODISCARD static inline UniqueVfb<T> MakeUniqueVfb(Args &&...args) {
     return MakeUniqueTaggedPoolZero<T, XenvfbTag>(wistd::forward<Args>(args)...);
 }
