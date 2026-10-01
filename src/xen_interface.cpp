@@ -44,13 +44,9 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     }
 
     if (!NT_SUCCESS(Status)) {
-        if (Status == STATUS_NOT_SUPPORTED)
-            goto done;
-
         goto fail2;
     }
 
-done:
     return STATUS_SUCCESS;
 
 fail2:

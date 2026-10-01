@@ -40,3 +40,7 @@ template <typename T, typename... Args>
 WI_NODISCARD static inline UniqueVfb<T> MakeUniqueVfb(Args &&...args) {
     return MakeUniqueTaggedPoolZero<T, XenvfbTag>(wistd::forward<Args>(args)...);
 }
+
+void __cdecl operator delete(void *p);
+void __cdecl operator delete(void *p, size_t s);
+void __cdecl operator delete[](void *p);

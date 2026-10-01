@@ -10,6 +10,7 @@ public:
     VfbDevice &operator=(const VfbDevice &) = delete;
     VfbDevice(VfbDevice &&) = delete;
     VfbDevice &operator=(VfbDevice &&) = delete;
+    ~VfbDevice() {}
 
     DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
         _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS StartDevice(
@@ -24,7 +25,10 @@ public:
 private:
     const PDEVICE_OBJECT _pdo = nullptr;
 
-    DXGKRNL_INTERFACE _interface{};
-    XenbusDebugInterface _debugInterface{};
+    DXGKRNL_INTERFACE _dxgk{};
+    DebugInterface _debug{};
+    EvtchnInterface _evtchn{};
+    StoreInterface _store{};
+    SuspendInterface _suspend{};
     bool _started = false;
 };
