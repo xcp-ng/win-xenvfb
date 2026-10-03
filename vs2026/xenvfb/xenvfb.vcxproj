@@ -88,7 +88,7 @@
     </DriverSign>
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -101,7 +101,7 @@
     </DriverSign>
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
     </DriverSign>
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_ARM64_;ARM64;_USE_DECLSPECS_FOR_SAL=1;STD_CALL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_ARM64_;ARM64;_USE_DECLSPECS_FOR_SAL=1;STD_CALL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -127,7 +127,7 @@
     </DriverSign>
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_ARM64_;ARM64;_USE_DECLSPECS_FOR_SAL=1;STD_CALL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_ARM64_;ARM64;_USE_DECLSPECS_FOR_SAL=1;STD_CALL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -144,6 +144,8 @@
     <ClCompile Include="..\..\src\allocator.cpp" />
     <ClCompile Include="..\..\src\ddi.cpp" />
     <ClCompile Include="..\..\src\device.cpp" />
+    <ClCompile Include="..\..\src\edid.cpp" />
+    <ClCompile Include="..\..\src\frontend.cpp" />
     <ClCompile Include="..\..\src\frontends.cpp" />
     <ClCompile Include="..\..\src\guids.cpp" />
     <ClCompile Include="..\..\src\kthread.cpp" />
@@ -156,6 +158,7 @@
     <ClInclude Include="..\..\src\common.hpp" />
     <ClInclude Include="..\..\src\dbg_print.hpp" />
     <ClInclude Include="..\..\src\device.hpp" />
+    <ClInclude Include="..\..\src\edid.hpp" />
     <ClInclude Include="..\..\src\frontend.hpp" />
     <ClInclude Include="..\..\src\frontends.hpp" />
     <ClInclude Include="..\..\src\function_traits.hpp" />

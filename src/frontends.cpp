@@ -3,7 +3,7 @@
 #include "dbg_print.hpp"
 #include "frontends.hpp"
 
-NTSTATUS FrontendManager::Initialize() noexcept {
+NTSTATUS VfbFrontendManager::Initialize() noexcept {
     NTSTATUS Status;
 
     Status = _store(_store->StoreWatchAdd, const_cast<PSTR>("device"), const_cast<PSTR>("vfb"), &_threadEvent, &_watch);
@@ -21,7 +21,7 @@ NTSTATUS FrontendManager::Initialize() noexcept {
     return STATUS_SUCCESS;
 }
 
-NTSTATUS FrontendManager::Enumerate() noexcept {
+NTSTATUS VfbFrontendManager::Enumerate() noexcept {
     NTSTATUS Status;
 
     StoreString paths = _store.EmptyString();
@@ -36,7 +36,7 @@ NTSTATUS FrontendManager::Enumerate() noexcept {
     return STATUS_NOT_IMPLEMENTED;
 }
 
-void FrontendManager::ThreadWork() noexcept {
+void VfbFrontendManager::ThreadWork() noexcept {
     while (true) {
         for (;;) {
             Trace("waiting...\n");
@@ -53,10 +53,35 @@ void FrontendManager::ThreadWork() noexcept {
     }
 }
 
-FrontendManager::~FrontendManager() {
+VfbFrontendManager::~VfbFrontendManager() {
     ThreadAlert();
     ThreadJoin();
     if (_watch) {
         _store(_store->StoreWatchRemove, _watch);
     }
+}
+
+DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
+NTSTATUS
+VfbFrontendManager::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept {
+    auto lock = _lock.acquire();
+
+    if (ChildUid >= ARRAYSIZE(_frontends)) {
+        return STATUS_GRAPHICS_CHILD_DESCRIPTOR_NOT_SUPPORTED;
+    }
+
+    return _frontends[ChildUid]->QueryDeviceDescriptor(DeviceDescriptor);
+}
+
+DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
+NTSTATUS
+VfbFrontendManager::SetPowerState(
+    IN_ULONG DeviceUid,
+    IN_DEVICE_POWER_STATE DevicePowerState,
+    IN_POWER_ACTION ActionType) noexcept {
+    UNREFERENCED_PARAMETER(DeviceUid);
+    UNREFERENCED_PARAMETER(DevicePowerState);
+    UNREFERENCED_PARAMETER(ActionType);
+
+    return STATUS_NOT_IMPLEMENTED;
 }
