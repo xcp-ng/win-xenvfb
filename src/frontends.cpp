@@ -64,7 +64,7 @@ VfbFrontendManager::~VfbFrontendManager() {
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
 VfbFrontendManager::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept {
-    auto lock = _lock.acquire();
+    auto lock = _lock.AcquireShared();
 
     if (ChildUid >= ARRAYSIZE(_frontends)) {
         return STATUS_GRAPHICS_CHILD_DESCRIPTOR_NOT_SUPPORTED;

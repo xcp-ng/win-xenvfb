@@ -6,10 +6,11 @@
 #include "kthread.hpp"
 #include "frontend.hpp"
 #include "allocator.hpp"
+#include "mrsw.hpp"
 
 class VfbFrontendManager : protected KThread {
 public:
-    VfbFrontendManager(StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
+    explicit VfbFrontendManager(StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
     VfbFrontendManager(const VfbFrontendManager &) = delete;
     VfbFrontendManager &operator=(const VfbFrontendManager &) = delete;
     VfbFrontendManager(VfbFrontendManager &&) = delete;
@@ -19,11 +20,11 @@ public:
     NTSTATUS Initialize() noexcept;
 
     _IRQL_requires_max_(APC_LEVEL) bool HasChild(ULONG uid) {
-        auto lock = _lock.acquire();
+        auto lock = _lock.AcquireShared();
         if (uid >= ARRAYSIZE(_frontends)) {
             return false;
         }
-        return _frontends[uid].get();
+        return static_cast<bool>(_frontends[uid]);
     }
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
@@ -43,6 +44,6 @@ private:
 
     // Globally locks the frontend list and frontend creation/deletion.
     // Does not lock the VfbFrontend itself!
-    wil::fast_mutex _lock;
+    MrswLock _lock;
     UniqueVfb<VfbFrontend> _frontends[VfbMaxChildren];
 };

@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\src\frontends.hpp" />
     <ClInclude Include="..\..\src\function_traits.hpp" />
     <ClInclude Include="..\..\src\kthread.hpp" />
+    <ClInclude Include="..\..\src\mrsw.hpp" />
     <ClInclude Include="..\..\src\vfb.hpp" />
     <ClInclude Include="..\..\src\xenbus.hpp" />
     <ClInclude Include="..\..\src\xen_interface.hpp" />
