@@ -144,12 +144,25 @@
     <ClCompile Include="..\..\src\allocator.cpp" />
     <ClCompile Include="..\..\src\ddi.cpp" />
     <ClCompile Include="..\..\src\device.cpp" />
+    <ClCompile Include="..\..\src\frontends.cpp" />
     <ClCompile Include="..\..\src\guids.cpp" />
+    <ClCompile Include="..\..\src\kthread.cpp" />
+    <ClCompile Include="..\..\src\xenbus.cpp" />
     <ClCompile Include="..\..\src\xen_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\allocator.hpp" />
+    <ClInclude Include="..\..\src\assert.hpp" />
+    <ClInclude Include="..\..\src\common.hpp" />
+    <ClInclude Include="..\..\src\dbg_print.hpp" />
     <ClInclude Include="..\..\src\device.hpp" />
+    <ClInclude Include="..\..\src\frontend.hpp" />
+    <ClInclude Include="..\..\src\frontends.hpp" />
+    <ClInclude Include="..\..\src\function_traits.hpp" />
+    <ClInclude Include="..\..\src\kthread.hpp" />
+    <ClInclude Include="..\..\src\vfb.hpp" />
+    <ClInclude Include="..\..\src\xenbus.hpp" />
+    <ClInclude Include="..\..\src\xen_interface.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

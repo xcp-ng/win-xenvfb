@@ -5,12 +5,14 @@
 // IWYU pragma: begin_exports
 
 extern "C" {
-#include <ntddk.h>
+#include <ntifs.h>
 
 #include <dispmprt.h>
 }
 
+// attention: most STL headers cannot be used in kernel mode
 #include <stdarg.h>
+
 #include <wil/resource.h>
 #include <wil/result_macros.h>
 

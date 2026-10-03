@@ -41,14 +41,26 @@ DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_START_
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbStopDevice(IN_CONST_PVOID MiniportDeviceContext) {
     PAGED_CODE();
-    UNREFERENCED_PARAMETER(MiniportDeviceContext);
-    return STATUS_NOT_IMPLEMENTED;
+
+    if (!MiniportDeviceContext) {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    auto device = static_cast<VfbDevice *>(MiniportDeviceContext);
+    return device->StopDevice();
 }
 
 DECLSPEC_PAGED_CODE EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_REMOVE_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS FbRemoveDevice(IN_CONST_PVOID MiniportDeviceContext) {
     PAGED_CODE();
-    TaggedPoolDeleter<VfbDevice, XenvfbTag>{}(static_cast<VfbDevice *>(MiniportDeviceContext));
+
+    if (!MiniportDeviceContext) {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    auto device = static_cast<VfbDevice *>(MiniportDeviceContext);
+    TaggedPoolDeleter<VfbDevice, XenvfbTag>{}(device);
+
     return STATUS_SUCCESS;
 }
 
@@ -336,7 +348,7 @@ DECLSPEC_PAGED_CODE EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObje
         .DxgkDdiCommitVidPn = FbCommitVidPn,
         .DxgkDdiUpdateActiveVidPnPresentPath = FbUpdateActiveVidPnPresentPath,
         .DxgkDdiRecommendMonitorModes = FbRecommendMonitorModes,
-        // .DxgkDdiGetScanLine = FbGetScanLine,
+        // .DxgkDdiGetScanLine
         .DxgkDdiQueryVidPnHWCapability = FbQueryVidPnHWCapability,
         .DxgkDdiPresentDisplayOnly = FbPresentDisplayOnly,
         .DxgkDdiStopDeviceAndReleasePostDisplayOwnership = FbStopDeviceAndReleasePostDisplayOwnership,
@@ -346,7 +358,7 @@ DECLSPEC_PAGED_CODE EXTERN_C NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObje
         // .DxgkDdiControlInterrupt
         // .DxgkDdiSetPowerComponentFState
         // .DxgkDdiPowerRuntimeControlRequest
-        // .DxgkDdiNotifySurpriseRemoval = FbNotifySurpriseRemoval,
+        // .DxgkDdiNotifySurpriseRemoval
     };
     return DxgkInitializeDisplayOnlyDriver(DriverObject, RegistryPath, &InitialData);
 }

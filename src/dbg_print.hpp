@@ -1,5 +1,6 @@
 /* Copyright (c) Xen Project.
  * Copyright (c) Cloud Software Group, Inc.
+ * Copyright (c) Vates.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -75,7 +76,13 @@ static __inline VOID __Trace(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     vDbgPrintExWithPrefix(Prefix, DPFLTR_IHVVIDEO_ID, DPFLTR_TRACE_LEVEL, Format, Arguments);
     va_end(Arguments);
 }
+
 #define Trace(...) __Trace(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
+#if DBG
+#define DebugTrace(...) Trace(__VA_ARGS__)
+#else
+#define DebugTrace(...)
+#endif
 
 static __inline VOID __Info(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_list Arguments;
@@ -88,6 +95,11 @@ static __inline VOID __Info(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
 }
 
 #define Info(...) __Info(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
+#if DBG
+#define DebugInfo(...) Info(__VA_ARGS__)
+#else
+#define DebugInfo(...)
+#endif
 
 #define DBG_PRINT_ENABLE_FILTER(_Id, _Level) \
     do { \

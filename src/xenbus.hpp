@@ -11,7 +11,7 @@ extern "C" {
 }
 
 template <>
-struct XenInterfaceAdapter<XENBUS_DEBUG_INTERFACE> {
+struct XenTraits<XENBUS_DEBUG_INTERFACE> {
     static NTSTATUS Acquire(XENBUS_DEBUG_INTERFACE i) {
         return i.DebugAcquire(&i.Interface);
     }
@@ -26,9 +26,10 @@ struct XenInterfaceAdapter<XENBUS_DEBUG_INTERFACE> {
     }
 };
 using DebugInterface = XenInterface<XENBUS_DEBUG_INTERFACE>;
+using DebugHandle = XenHandle<XENBUS_DEBUG_INTERFACE>;
 
 template <>
-struct XenInterfaceAdapter<XENBUS_EVTCHN_INTERFACE> {
+struct XenTraits<XENBUS_EVTCHN_INTERFACE> {
     static NTSTATUS Acquire(XENBUS_EVTCHN_INTERFACE i) {
         return i.EvtchnAcquire(&i.Interface);
     }
@@ -43,9 +44,10 @@ struct XenInterfaceAdapter<XENBUS_EVTCHN_INTERFACE> {
     }
 };
 using EvtchnInterface = XenInterface<XENBUS_EVTCHN_INTERFACE>;
+using EvtchnHandle = XenHandle<XENBUS_EVTCHN_INTERFACE>;
 
 template <>
-struct XenInterfaceAdapter<XENBUS_STORE_INTERFACE> {
+struct XenTraits<XENBUS_STORE_INTERFACE> {
     static NTSTATUS Acquire(XENBUS_STORE_INTERFACE i) {
         return i.StoreAcquire(&i.Interface);
     }
@@ -61,8 +63,54 @@ struct XenInterfaceAdapter<XENBUS_STORE_INTERFACE> {
 };
 using StoreInterface = XenInterface<XENBUS_STORE_INTERFACE>;
 
+// note: StoreHandle must outlive any StoreDeleter attached to it (and any dependent resources)
+struct StoreDeleter {
+    StoreDeleter(XenHandle<XENBUS_STORE_INTERFACE> &store) noexcept : _store(&store) {}
+    void operator()(_In_opt_ PSTR value) noexcept {
+        (*_store)((*_store)->StoreFree, value);
+    }
+
+    XenHandle<XENBUS_STORE_INTERFACE> *_store;
+};
+using StoreString = wistd::unique_ptr<CHAR, StoreDeleter>;
+
+class StoreHandle : public XenHandle<XENBUS_STORE_INTERFACE> {
+public:
+    StoreHandle() noexcept {}
+
+    StoreString EmptyString() noexcept {
+        return StoreString(nullptr, StoreDeleter(*this));
+    }
+
+    XENBUS_STORE_INTERFACE &operator*() noexcept {
+        return _data;
+    }
+    XENBUS_STORE_INTERFACE *operator->() noexcept {
+        return &_data;
+    }
+
+    template <typename F, typename... Args>
+    result_type_t<F> operator()(F method, Args &&...args) {
+        return method(&_data.Interface, wistd::forward<Args>(args)...);
+    }
+
+    NTSTATUS DirectoryTransacted(
+        _Out_ StoreString &Result,
+        _In_opt_ PXENBUS_STORE_TRANSACTION Transaction,
+        _In_opt_ PCSTR Prefix,
+        _In_ PCSTR Node) noexcept;
+
+    NTSTATUS Directory(_Out_ StoreString &Result, _In_opt_ PCSTR Prefix, _In_ PCSTR Node) noexcept {
+        return DirectoryTransacted(Result, nullptr, Prefix, Node);
+    }
+
+private:
+    friend StoreInterface;
+    StoreHandle(XENBUS_STORE_INTERFACE data, bool valid) noexcept : XenHandle<XENBUS_STORE_INTERFACE>(data, valid) {}
+};
+
 template <>
-struct XenInterfaceAdapter<XENBUS_SUSPEND_INTERFACE> {
+struct XenTraits<XENBUS_SUSPEND_INTERFACE> {
     static NTSTATUS Acquire(XENBUS_SUSPEND_INTERFACE i) {
         return i.Acquire(&i.Interface);
     }
@@ -77,3 +125,4 @@ struct XenInterfaceAdapter<XENBUS_SUSPEND_INTERFACE> {
     }
 };
 using SuspendInterface = XenInterface<XENBUS_SUSPEND_INTERFACE>;
+using SuspendHandle = XenHandle<XENBUS_SUSPEND_INTERFACE>;

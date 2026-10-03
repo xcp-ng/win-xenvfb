@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 #include "xenbus.hpp"
+#include "allocator.hpp"
+#include "frontends.hpp"
 
 class VfbDevice {
 public:
@@ -19,6 +21,16 @@ public:
             OUT_PULONG NumberOfVideoPresentSources,
             OUT_PULONG NumberOfChildren) noexcept;
 
+    // startup sequence
+    void StartDxgk(IN_PDXGKRNL_INTERFACE DxgkInterface) {
+        _dxgk = *DxgkInterface;
+    }
+    void StopDxgk() {
+        _dxgk = {};
+    }
+    DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS StartXen();
+    DECLSPEC_PAGED_CODE _IRQL_requires_DXGK_(PASSIVE_LEVEL) void StopXen();
+
     DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE)
         _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS StopDevice() noexcept;
 
@@ -26,9 +38,13 @@ private:
     const PDEVICE_OBJECT _pdo = nullptr;
 
     DXGKRNL_INTERFACE _dxgk{};
+
     DebugInterface _debug{};
     EvtchnInterface _evtchn{};
     StoreInterface _store{};
     SuspendInterface _suspend{};
+
+    UniqueVfb<FrontendManager> _fm;
+
     bool _started = false;
 };

@@ -22,7 +22,7 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
 
     Status = STATUS_UNSUCCESSFUL;
     if (Irp == NULL)
-        goto fail1;
+        goto fail_build_fsd;
 
     // suppress "uninitialized *Interface" warning when IoCallDriver succeeds
     RtlZeroMemory(Interface, sizeof(*Interface));
@@ -44,16 +44,16 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     }
 
     if (!NT_SUCCESS(Status)) {
-        goto fail2;
+        goto fail_call;
     }
 
     return STATUS_SUCCESS;
 
-fail2:
-    Error("fail2\n");
+fail_call:
+    Error("fail_call\n");
 
-fail1:
-    Error("fail1 (%08x)\n", Status);
+fail_build_fsd:
+    Error("fail_build_fsd (%08x)\n", Status);
 
     return Status;
 }

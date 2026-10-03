@@ -1,5 +1,7 @@
 #include "device.hpp"
 #include "xenbus.hpp"
+#include "vfb.hpp"
+#include "frontends.hpp"
 
 DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS VfbDevice::StartDevice(
@@ -22,34 +24,91 @@ DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_START_DEVICE)
         return STATUS_NOT_SUPPORTED;
     }
 
-    _dxgk = *DxgkInterface;
+    StartDxgk(DxgkInterface);
+    auto cleanupDxgk = wil::scope_exit([&]() { StopDxgk(); });
 
-    Status = DebugInterface::Query(_debug, _pdo);
+    Status = StartXen();
+    auto cleanupXen = wil::scope_exit([&]() { StopXen(); });
     if (!NT_SUCCESS(Status)) {
         return Status;
     }
 
-    Status = EvtchnInterface::Query(_evtchn, _pdo);
+    {
+        StoreHandle storeHandle;
+        Status = _store.Acquire(storeHandle);
+        if (!NT_SUCCESS(Status)) {
+            return Status;
+        }
+
+        _fm = MakeUniqueVfb<FrontendManager>(wistd::move(storeHandle));
+    }
+    auto cleanupFm = wil::scope_exit([&]() { _fm.release(); });
+
+    Status = _fm->Initialize();
     if (!NT_SUCCESS(Status)) {
         return Status;
     }
 
-    Status = StoreInterface::Query(_store, _pdo);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
-    }
+    *NumberOfVideoPresentSources = VfbMaxViews;
+    *NumberOfChildren = VfbMaxChildren;
 
-    Status = SuspendInterface::Query(_suspend, _pdo);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
-    }
-
+    cleanupFm.release();
+    cleanupXen.release();
+    cleanupDxgk.release();
     _started = true;
     return STATUS_SUCCESS;
+}
+
+DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
+NTSTATUS VfbDevice::StartXen() {
+    NTSTATUS Status;
+
+    DebugInterface debug;
+    Status = DebugInterface::Query(debug, _pdo);
+    if (!NT_SUCCESS(Status)) {
+        return Status;
+    }
+
+    EvtchnInterface evtchn;
+    Status = EvtchnInterface::Query(evtchn, _pdo);
+    if (!NT_SUCCESS(Status)) {
+        return Status;
+    }
+
+    StoreInterface store;
+    Status = StoreInterface::Query(store, _pdo);
+    if (!NT_SUCCESS(Status)) {
+        return Status;
+    }
+
+    SuspendInterface suspend;
+    Status = SuspendInterface::Query(suspend, _pdo);
+    if (!NT_SUCCESS(Status)) {
+        return Status;
+    }
+
+    _debug = wistd::move(debug);
+    _evtchn = wistd::move(evtchn);
+    _store = wistd::move(store);
+    _suspend = wistd::move(suspend);
+    return Status;
+}
+
+DECLSPEC_PAGED_CODE _IRQL_requires_DXGK_(PASSIVE_LEVEL) void VfbDevice::StopXen() {
+    _suspend.Reset();
+    _store.Reset();
+    _evtchn.Reset();
+    _debug.Reset();
 }
 
 DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS VfbDevice::StopDevice() noexcept {
     PAGED_CODE();
-    return STATUS_NOT_IMPLEMENTED;
+
+    _started = false;
+    _fm.release();
+    StopXen();
+    StopDxgk();
+
+    return STATUS_SUCCESS;
 }

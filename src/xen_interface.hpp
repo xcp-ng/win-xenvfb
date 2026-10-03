@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "function_traits.hpp"
 
 _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     _In_ PDEVICE_OBJECT PhysicalDeviceObject,
@@ -10,20 +11,15 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     _In_ ULONG Size) noexcept;
 
 template <typename T>
-struct XenInterfaceAdapter;
-
-template <typename T, typename U>
-static inline constexpr bool IsSame = false;
-template <typename T>
-inline constexpr bool IsSame<T, T> = true;
+struct XenTraits;
 
 template <typename T>
 concept XenInterfaceType = requires(T t) {
-    requires IsSame<decltype(t.Interface), INTERFACE>;
-    requires IsSame<decltype(XenInterfaceAdapter<T>::Acquire(t)), NTSTATUS>;
-    XenInterfaceAdapter<T>::Release(t);
-    XenInterfaceAdapter<T>::GetGuid();
-    XenInterfaceAdapter<T>::GetVersion();
+    requires wistd::is_same_v<decltype(t.Interface), INTERFACE>;
+    requires wistd::is_same_v<decltype(XenTraits<T>::Acquire(t)), NTSTATUS>;
+    XenTraits<T>::Release(t);
+    requires wistd::is_convertible_v<decltype(XenTraits<T>::GetGuid()), const GUID &>;
+    requires wistd::is_convertible_v<decltype(XenTraits<T>::GetVersion()), ULONG>;
 };
 
 template <XenInterfaceType I>
@@ -57,42 +53,47 @@ public:
         dispose();
     }
 
-    static _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS Query(XenInterface &Interface, PDEVICE_OBJECT PhysicalDeviceObject) {
+    static _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
+        Query(_Out_ XenInterface &Interface, _In_ PDEVICE_OBJECT PhysicalDeviceObject) {
         I interface{};
 
         auto Status = VfbQueryInterface(
             PhysicalDeviceObject,
-            &XenInterfaceAdapter<I>::GetGuid(),
-            XenInterfaceAdapter<I>::GetVersion(),
+            &XenTraits<I>::GetGuid(),
+            XenTraits<I>::GetVersion(),
             &interface.Interface,
             sizeof(I));
         if (!NT_SUCCESS(Status)) {
             return Status;
         }
 
+        Interface.Reset();
         Interface._data = interface;
         Interface._valid = true;
         return Status;
     }
 
-    NTSTATUS Acquire(XenHandle<I> &Result) {
+    template <typename H>
+        requires requires(I &data) {
+            { H(data, true) } noexcept;
+        }
+    NTSTATUS Acquire(H &Result) {
         if (!_valid) {
             return STATUS_UNSUCCESSFUL;
         }
 
-        auto Status = XenInterfaceAdapter<I>::Acquire(_data);
+        auto Status = XenTraits<I>::Acquire(_data);
         if (!NT_SUCCESS(Status)) {
             return Status;
         }
 
-        Result = wistd::move(XenHandle<I>(_data, true));
+        Result = H(_data, true);
         return Status;
     }
 
     friend void swap(XenInterface &self, XenInterface &other) noexcept {
-        using wistd::swap;
-        swap(self._data, other._data);
-        swap(self._valid, other._valid);
+        self._data = wistd::exchange(other._data, self._data);
+        self._valid = wistd::exchange(other._valid, self._valid);
     }
 
 private:
@@ -144,13 +145,17 @@ public:
         return &_data;
     }
 
-    friend void swap(XenHandle &self, XenHandle &other) noexcept {
-        using wistd::swap;
-        swap(self._data, other._data);
-        swap(self._valid, other._valid);
+    template <typename F, typename... Args>
+    result_type_t<F> operator()(F method, Args &&...args) {
+        return method(&_data.Interface, wistd::forward<Args>(args)...);
     }
 
-private:
+    friend void swap(XenHandle &self, XenHandle &other) noexcept {
+        self._data = wistd::exchange(other._data, self._data);
+        self._valid = wistd::exchange(other._valid, self._valid);
+    }
+
+protected:
     friend class XenInterface<I>;
     XenHandle(I data, bool valid) noexcept : _data(data), _valid(valid) {}
 
@@ -159,7 +164,7 @@ private:
 
     void dispose() noexcept {
         if (wistd::exchange(_valid, false)) {
-            XenInterfaceAdapter<I>::Release(_data);
+            XenTraits<I>::Release(_data);
             _data = {};
         }
     }
