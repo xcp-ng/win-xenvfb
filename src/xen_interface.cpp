@@ -11,7 +11,7 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     IO_STATUS_BLOCK StatusBlock;
     PIRP Irp;
     PIO_STACK_LOCATION StackLocation;
-    NTSTATUS Status;
+    NTSTATUS status;
 
     ASSERT3U(KeGetCurrentIrql(), ==, PASSIVE_LEVEL);
 
@@ -20,7 +20,7 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
 
     Irp = IoBuildSynchronousFsdRequest(IRP_MJ_PNP, PhysicalDeviceObject, NULL, 0, NULL, &Event, &StatusBlock);
 
-    Status = STATUS_UNSUCCESSFUL;
+    status = STATUS_UNSUCCESSFUL;
     if (Irp == NULL)
         goto fail_build_fsd;
 
@@ -37,13 +37,13 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
 
     Irp->IoStatus.Status = STATUS_NOT_SUPPORTED;
 
-    Status = IoCallDriver(PhysicalDeviceObject, Irp);
-    if (Status == STATUS_PENDING) {
+    status = IoCallDriver(PhysicalDeviceObject, Irp);
+    if (status == STATUS_PENDING) {
         (VOID) KeWaitForSingleObject(&Event, Executive, KernelMode, FALSE, NULL);
-        Status = StatusBlock.Status;
+        status = StatusBlock.Status;
     }
 
-    if (!NT_SUCCESS(Status)) {
+    if (!NT_SUCCESS(status)) {
         goto fail_call;
     }
 
@@ -53,7 +53,7 @@ fail_call:
     Error("fail_call\n");
 
 fail_build_fsd:
-    Error("fail_build_fsd (%08x)\n", Status);
+    Error("fail_build_fsd (%08x)\n", status);
 
-    return Status;
+    return status;
 }

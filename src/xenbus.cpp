@@ -7,13 +7,13 @@ NTSTATUS StoreHandle::DirectoryTransacted(
     _In_opt_ PCSTR Prefix,
     _In_ PCSTR Node) noexcept {
     PSTR pResult = nullptr;
-    NTSTATUS Status;
+    NTSTATUS status;
 
-    Status = (*this)((*this)->StoreDirectory, Transaction, const_cast<PSTR>(Prefix), const_cast<PSTR>(Node), &pResult);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    status = (*this)((*this)->StoreDirectory, Transaction, const_cast<PSTR>(Prefix), const_cast<PSTR>(Node), &pResult);
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
     Result = StoreString(pResult, StoreDeleter(*this));
-    return Status;
+    return status;
 }

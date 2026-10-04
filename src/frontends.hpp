@@ -2,7 +2,6 @@
 
 #include "common.hpp"
 #include "xenbus.hpp"
-#include "vfb.hpp"
 #include "kthread.hpp"
 #include "frontend.hpp"
 #include "allocator.hpp"
@@ -10,6 +9,9 @@
 
 class VfbFrontendManager : protected KThread {
 public:
+    static constexpr size_t MaxViews = 1;
+    static constexpr size_t MaxChildren = 1;
+
     explicit VfbFrontendManager(StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
     VfbFrontendManager(const VfbFrontendManager &) = delete;
     VfbFrontendManager &operator=(const VfbFrontendManager &) = delete;
@@ -21,10 +23,10 @@ public:
 
     _IRQL_requires_max_(APC_LEVEL) bool HasChild(ULONG uid) {
         auto lock = _lock.AcquireShared();
-        if (uid >= ARRAYSIZE(_frontends)) {
+        if (uid >= MaxChildren) {
             return false;
         }
-        return static_cast<bool>(_frontends[uid]);
+        return !!_frontends[uid];
     }
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
@@ -32,6 +34,19 @@ public:
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
         SetPowerState(IN_ULONG DeviceUid, IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType) noexcept;
+
+    DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS IsSupportedVidPn(
+        INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn,
+        _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
+        _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
+        const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
+
+    DECLSPEC_PAGED_CODE
+    _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS EnumVidPnCofuncModality(
+        IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality,
+        _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
+        _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
+        _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
 
 protected:
     virtual void ThreadWork() noexcept override;
@@ -45,5 +60,5 @@ private:
     // Globally locks the frontend list and frontend creation/deletion.
     // Does not lock the VfbFrontend itself!
     MrswLock _lock;
-    UniqueVfb<VfbFrontend> _frontends[VfbMaxChildren];
+    UniqueVfb<VfbFrontend> _frontends[MaxChildren];
 };

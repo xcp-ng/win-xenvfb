@@ -1,6 +1,5 @@
 #include "device.hpp"
 #include "xenbus.hpp"
-#include "vfb.hpp"
 #include "frontends.hpp"
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
@@ -9,7 +8,7 @@ NTSTATUS VfbDevice::StartDevice(
     IN_PDXGKRNL_INTERFACE DxgkInterface,
     OUT_PULONG NumberOfVideoPresentSources,
     OUT_PULONG NumberOfChildren) noexcept {
-    NTSTATUS Status;
+    NTSTATUS status;
 
     UNREFERENCED_PARAMETER(DxgkStartInfo);
     UNREFERENCED_PARAMETER(NumberOfVideoPresentSources);
@@ -26,30 +25,30 @@ NTSTATUS VfbDevice::StartDevice(
     StartDxgk(DxgkInterface);
     auto cleanupDxgk = wil::scope_exit([&]() { StopDxgk(); });
 
-    Status = StartXen();
+    status = StartXen();
     auto cleanupXen = wil::scope_exit([&]() { StopXen(); });
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
     {
         StoreHandle storeHandle;
-        Status = _store.Acquire(storeHandle);
-        if (!NT_SUCCESS(Status)) {
-            return Status;
+        status = _store.Acquire(storeHandle);
+        if (!NT_SUCCESS(status)) {
+            return status;
         }
 
         _fm = MakeUniqueVfb<VfbFrontendManager>(wistd::move(storeHandle));
     }
     auto cleanupFm = wil::scope_exit([&]() { _fm.release(); });
 
-    Status = _fm->Initialize();
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    status = _fm->Initialize();
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
-    *NumberOfVideoPresentSources = VfbMaxViews;
-    *NumberOfChildren = VfbMaxChildren;
+    *NumberOfVideoPresentSources = VfbFrontendManager::MaxViews;
+    *NumberOfChildren = VfbFrontendManager::MaxChildren;
 
     cleanupFm.release();
     cleanupXen.release();
@@ -60,37 +59,37 @@ NTSTATUS VfbDevice::StartDevice(
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS VfbDevice::StartXen() {
-    NTSTATUS Status;
+    NTSTATUS status;
 
     DebugInterface debug;
-    Status = DebugInterface::Query(debug, _pdo);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    status = DebugInterface::Query(debug, _pdo);
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
     EvtchnInterface evtchn;
-    Status = EvtchnInterface::Query(evtchn, _pdo);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    status = EvtchnInterface::Query(evtchn, _pdo);
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
     StoreInterface store;
-    Status = StoreInterface::Query(store, _pdo);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    status = StoreInterface::Query(store, _pdo);
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
     SuspendInterface suspend;
-    Status = SuspendInterface::Query(suspend, _pdo);
-    if (!NT_SUCCESS(Status)) {
-        return Status;
+    status = SuspendInterface::Query(suspend, _pdo);
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
     _debug = wistd::move(debug);
     _evtchn = wistd::move(evtchn);
     _store = wistd::move(store);
     _suspend = wistd::move(suspend);
-    return Status;
+    return status;
 }
 
 DECLSPEC_PAGED_CODE _IRQL_requires_DXGK_(PASSIVE_LEVEL) void VfbDevice::StopXen() {
@@ -137,11 +136,11 @@ NTSTATUS VfbDevice::QueryChildRelations(
     if (!ChildRelations) {
         return STATUS_INVALID_PARAMETER;
     }
-    if (ChildRelationsSize / sizeof(*ChildRelations) != VfbMaxChildren + 1) {
+    if (ChildRelationsSize / sizeof(*ChildRelations) != VfbFrontendManager::MaxChildren + 1) {
         return STATUS_INVALID_PARAMETER;
     }
 
-    for (ULONG i = 0; i < VfbMaxChildren; i++) {
+    for (ULONG i = 0; i < VfbFrontendManager::MaxChildren; i++) {
         ChildRelations[i] = DXGK_CHILD_DESCRIPTOR{
             .ChildDeviceType = TypeVideoOutput,
             .ChildCapabilities =
@@ -203,14 +202,14 @@ VfbDevice::SetPowerState(
 
     // for us
     if (DevicePowerState == PowerDeviceD0) {
+        // TODO
+
         if (_powerState == PowerDeviceD3) {
             DXGKARG_SETVIDPNSOURCEVISIBILITY Visibility;
             Visibility.VidPnSourceId = D3DDDI_ID_ALL;
             Visibility.Visible = FALSE;
             SetVidPnSourceVisibility(&Visibility);
         }
-        // TODO
-        return STATUS_NOT_IMPLEMENTED;
     }
 
     _powerState = DevicePowerState;
@@ -261,9 +260,33 @@ VfbDevice::SetPointerShape(IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape) n
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
 VfbDevice::IsSupportedVidPn(INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn) noexcept {
-    UNREFERENCED_PARAMETER(pIsSupportedVidPn);
+    NTSTATUS status;
 
-    return STATUS_NOT_IMPLEMENTED;
+    if (!pIsSupportedVidPn) {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    if (!pIsSupportedVidPn->hDesiredVidPn) {
+        return STATUS_SUCCESS;
+    }
+
+    const DXGK_VIDPN_INTERFACE *vidPnInterface;
+    status = _dxgk.DxgkCbQueryVidPnInterface(
+        pIsSupportedVidPn->hDesiredVidPn,
+        DXGK_VIDPN_INTERFACE_VERSION_V1,
+        &vidPnInterface);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    D3DKMDT_HVIDPNTOPOLOGY vidPnTopology;
+    const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface;
+    status = vidPnInterface->pfnGetTopology(pIsSupportedVidPn->hDesiredVidPn, &vidPnTopology, &vidPnTopologyInterface);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    return _fm->IsSupportedVidPn(pIsSupportedVidPn, vidPnInterface, vidPnTopology, vidPnTopologyInterface);
 }
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
@@ -278,9 +301,32 @@ VfbDevice::RecommendFunctionalVidPn(
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
 VfbDevice::EnumVidPnCofuncModality(IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality) noexcept {
-    UNREFERENCED_PARAMETER(pEnumCofuncModality);
+    NTSTATUS status;
 
-    return STATUS_NOT_IMPLEMENTED;
+    if (!pEnumCofuncModality || !pEnumCofuncModality->hConstrainingVidPn) {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    const DXGK_VIDPN_INTERFACE *vidPnInterface;
+    status = _dxgk.DxgkCbQueryVidPnInterface(
+        pEnumCofuncModality->hConstrainingVidPn,
+        DXGK_VIDPN_INTERFACE_VERSION_V1,
+        &vidPnInterface);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    D3DKMDT_HVIDPNTOPOLOGY vidPnTopology;
+    const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface;
+    status = vidPnInterface->pfnGetTopology(
+        pEnumCofuncModality->hConstrainingVidPn,
+        &vidPnTopology,
+        &vidPnTopologyInterface);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    return _fm->EnumVidPnCofuncModality(pEnumCofuncModality, vidPnInterface, vidPnTopology, vidPnTopologyInterface);
 }
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
