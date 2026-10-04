@@ -11,7 +11,7 @@ public:
     KThread &operator=(KThread &&) = delete;
     virtual ~KThread();
 
-    NTSTATUS ThreadStart() noexcept;
+    _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS ThreadStart() noexcept;
     void ThreadWake() noexcept {
         KeSetEvent(&_threadEvent, IO_NO_INCREMENT, FALSE);
     }
@@ -19,8 +19,8 @@ public:
         InterlockedExchange(&_threadAlerted, 1);
         ThreadWake();
     }
-    virtual void ThreadWork() noexcept = 0;
-    void ThreadJoin() noexcept;
+    _IRQL_requires_(PASSIVE_LEVEL) virtual void ThreadWork() noexcept = 0;
+    _IRQL_requires_(PASSIVE_LEVEL) void ThreadJoin() noexcept;
 
 protected:
     bool ThreadIsAlerted() noexcept {

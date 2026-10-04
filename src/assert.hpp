@@ -35,13 +35,12 @@
 #include "common.hpp"
 #include "dbg_print.hpp"
 
-static FORCEINLINE VOID __Bug(
+_Analysis_noreturn_ static DECLSPEC_NORETURN FORCEINLINE VOID __Bug(
     _In_ ULONG Code,
     _In_ ULONG_PTR Parameter1,
     _In_ ULONG_PTR Parameter2,
     _In_ ULONG_PTR Parameter3,
     _In_ ULONG_PTR Parameter4) {
-#pragma prefast(suppress : 28159)
     KeBugCheckEx(Code, Parameter1, Parameter2, Parameter3, Parameter4);
 }
 

@@ -39,7 +39,7 @@ public:
         INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn,
         _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
         _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
-        const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
+        _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
 
     DECLSPEC_PAGED_CODE
     _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS EnumVidPnCofuncModality(
@@ -49,7 +49,7 @@ public:
         _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
 
 protected:
-    virtual void ThreadWork() noexcept override;
+    _IRQL_requires_(PASSIVE_LEVEL) virtual void ThreadWork() noexcept override;
 
 private:
     NTSTATUS Enumerate() noexcept;

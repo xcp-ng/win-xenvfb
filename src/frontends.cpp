@@ -36,7 +36,7 @@ NTSTATUS VfbFrontendManager::Enumerate() noexcept {
     return STATUS_NOT_IMPLEMENTED;
 }
 
-void VfbFrontendManager::ThreadWork() noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) void VfbFrontendManager::ThreadWork() noexcept {
     while (true) {
         for (;;) {
             Trace("waiting...\n");
@@ -64,6 +64,8 @@ VfbFrontendManager::~VfbFrontendManager() {
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
 VfbFrontendManager::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept {
+    PAGED_CODE();
+
     auto lock = _lock.AcquireShared();
 
     if (ChildUid >= MaxChildren) {
@@ -79,6 +81,8 @@ VfbFrontendManager::SetPowerState(
     IN_ULONG DeviceUid,
     IN_DEVICE_POWER_STATE DevicePowerState,
     IN_POWER_ACTION ActionType) noexcept {
+    PAGED_CODE();
+
     auto lock = _lock.AcquireShared();
 
     if (DeviceUid >= MaxChildren) {
@@ -95,6 +99,8 @@ VfbFrontendManager::IsSupportedVidPn(
     _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
     _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
     _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept {
+    PAGED_CODE();
+
     NTSTATUS status;
 
     pIsSupportedVidPn->IsVidPnSupported = FALSE;
@@ -223,6 +229,8 @@ VfbFrontendManager::EnumVidPnCofuncModality(
     _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
     _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
     _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept {
+    PAGED_CODE();
+
     NTSTATUS status;
 
     // Keep framebuffer limits and mode policy stable while building both sets.
