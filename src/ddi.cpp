@@ -2,8 +2,6 @@
 #include "allocator.hpp"
 #include "device.hpp"
 
-EXTERN_C DECLSPEC_PAGED_CODE DRIVER_INITIALIZE DriverEntry;
-
 EXTERN_C DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DEVICE)
     _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
     VfbAddDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject, OUT_PPVOID MiniportDeviceContext) {
@@ -294,8 +292,8 @@ _Function_class_DXGK_(DXGKDDI_SYSTEM_DISPLAY_WRITE) VOID VfbSystemDisplayWrite(
     return device->SystemDisplayWrite(Source, SourceWidth, SourceHeight, SourceStride, PositionX, PositionY);
 }
 
-EXTERN_C DECLSPEC_PAGED_CODE _Use_decl_annotations_
-NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
+_Function_class_(DRIVER_INITIALIZE) _IRQL_requires_same_ _IRQL_requires_(PASSIVE_LEVEL)
+NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
     PAGED_CODE();
 
     KMDDOD_INITIALIZATION_DATA InitialData{

@@ -4,7 +4,7 @@
 
 class KThread {
 public:
-    KThread() noexcept;
+    explicit KThread() noexcept;
     KThread(const KThread &) = delete;
     KThread &operator=(const KThread &) = delete;
     KThread(KThread &&) = delete;

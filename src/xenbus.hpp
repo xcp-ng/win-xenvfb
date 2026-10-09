@@ -64,19 +64,21 @@ struct XenTraits<XENBUS_STORE_INTERFACE> {
 using StoreInterface = XenInterface<XENBUS_STORE_INTERFACE>;
 
 // note: StoreHandle must outlive any StoreDeleter attached to it (and any dependent resources)
-struct StoreDeleter {
-    StoreDeleter(XenHandle<XENBUS_STORE_INTERFACE> &store) noexcept : _store(&store) {}
+class StoreDeleter {
+public:
+    explicit StoreDeleter(XenHandle<XENBUS_STORE_INTERFACE> &store) noexcept : _store(&store) {}
     void operator()(_In_opt_ PSTR value) noexcept {
         (*_store)((*_store)->StoreFree, value);
     }
 
+private:
     XenHandle<XENBUS_STORE_INTERFACE> *_store;
 };
 using StoreString = wistd::unique_ptr<CHAR, StoreDeleter>;
 
 class StoreHandle : public XenHandle<XENBUS_STORE_INTERFACE> {
 public:
-    StoreHandle() noexcept {}
+    explicit StoreHandle() noexcept {}
 
     StoreString EmptyString() noexcept {
         return StoreString(nullptr, StoreDeleter(*this));

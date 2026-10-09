@@ -29,7 +29,7 @@ class XenHandle;
 template <XenInterfaceType I>
 class XenInterface {
 public:
-    XenInterface() noexcept {}
+    explicit XenInterface() noexcept {}
     XenInterface(const XenInterface &other) = delete;
     XenInterface &operator=(const XenInterface &other) = delete;
     XenInterface(XenInterface &&other) noexcept {
@@ -114,7 +114,7 @@ private:
 template <XenInterfaceType I>
 class XenHandle {
 public:
-    XenHandle() noexcept {}
+    explicit XenHandle() noexcept {}
     XenHandle(const XenHandle &other) = delete;
     XenHandle &operator=(const XenHandle &other) = delete;
     XenHandle(XenHandle &&other) noexcept {
