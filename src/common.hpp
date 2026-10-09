@@ -6,6 +6,7 @@
 
 extern "C" {
 #include <ntifs.h>
+#include <ntintsafe.h>
 
 #include <dispmprt.h>
 }
