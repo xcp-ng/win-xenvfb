@@ -110,14 +110,6 @@ public:
         return SharedGuard(ExAcquireRundownProtection(&_rundown) ? this : nullptr);
     }
 
-    [[nodiscard]] _IRQL_requires_max_(DISPATCH_LEVEL) SharedGuard SpinAcquireShared() noexcept {
-        ASSERT3U(KeGetCurrentIrql(), <=, DISPATCH_LEVEL);
-        while (!ExAcquireRundownProtection(&_rundown)) {
-            YieldProcessor();
-        }
-        return SharedGuard(this);
-    }
-
     [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) ExclusiveGuard AcquireExclusive() noexcept {
         ASSERT3U(KeGetCurrentIrql(), <=, APC_LEVEL);
 
