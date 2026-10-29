@@ -115,10 +115,10 @@ private:
 
     DXGKRNL_INTERFACE _dxgk{};
 
-    DebugInterface _debug{};
-    EvtchnInterface _evtchn{};
-    StoreInterface _store{};
-    SuspendInterface _suspend{};
+    xenklib::DebugInterface _debug{};
+    xenklib::EvtchnInterface _evtchn{};
+    xenklib::StoreInterface _store{};
+    xenklib::SuspendInterface _suspend{};
 
     UniqueVfb<VfbFrontendManager> _fm;
     DEVICE_POWER_STATE _powerState = PowerDeviceD0;

@@ -2,8 +2,9 @@
 #include <xenklib/kthread.hpp>
 #include <xenklib/assert.hpp>
 
-EXTERN_C _IRQL_requires_same_ _Function_class_(KSTART_ROUTINE)
-VOID KThreadStartRoutine(_In_ PVOID StartContext) {
+namespace xenklib {
+
+EXTERN_C _IRQL_requires_same_ _Function_class_(KSTART_ROUTINE) VOID KThreadStartRoutine(_In_ PVOID StartContext) {
     auto worker = static_cast<KThread *>(StartContext);
     if (!worker) {
         return;
@@ -80,3 +81,5 @@ KThread::~KThread() {
         ObDereferenceObject(_thread);
     }
 }
+
+} // namespace xenklib

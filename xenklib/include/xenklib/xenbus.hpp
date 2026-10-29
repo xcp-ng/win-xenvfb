@@ -10,6 +10,8 @@ extern "C" {
 #include "suspend_interface.h"
 }
 
+namespace xenklib {
+
 template <>
 struct XenTraits<XENBUS_DEBUG_INTERFACE> {
     static NTSTATUS Acquire(XENBUS_DEBUG_INTERFACE i) {
@@ -128,3 +130,5 @@ struct XenTraits<XENBUS_SUSPEND_INTERFACE> {
 };
 using SuspendInterface = XenInterface<XENBUS_SUSPEND_INTERFACE>;
 using SuspendHandle = XenHandle<XENBUS_SUSPEND_INTERFACE>;
+
+} // namespace xenklib

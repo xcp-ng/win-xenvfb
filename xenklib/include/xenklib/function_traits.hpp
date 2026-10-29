@@ -2,6 +2,8 @@
 
 #include <xenklib/common.hpp>
 
+namespace xenklib {
+
 template <typename F>
 struct function_traits {};
 
@@ -22,3 +24,5 @@ struct function_traits<R (*)(T...)> {
 
 template <typename F>
 using result_type_t = typename function_traits<F>::result_type;
+
+} // namespace xenklib

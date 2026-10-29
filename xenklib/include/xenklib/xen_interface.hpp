@@ -3,6 +3,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/function_traits.hpp>
 
+namespace xenklib {
+
 _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS XenQueryInterface(
     _In_ PDEVICE_OBJECT PhysicalDeviceObject,
     _In_ const GUID *Guid,
@@ -169,3 +171,5 @@ protected:
         }
     }
 };
+
+} // namespace xenklib

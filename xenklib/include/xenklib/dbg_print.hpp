@@ -35,6 +35,8 @@
 
 #include <xenklib/common.hpp>
 
+namespace xenklib {
+
 #define stringify_literal(_text) #_text
 #define stringify(_text) stringify_literal(_text)
 #define __MODULE__ stringify(PROJECT)
@@ -51,7 +53,7 @@ static __inline VOID __Error(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_end(Arguments);
 }
 
-#define Error(...) __Error(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
+#define Error(...) xenklib::__Error(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
 
 static __inline VOID __Warning(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_list Arguments;
@@ -63,7 +65,7 @@ static __inline VOID __Warning(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_end(Arguments);
 }
 
-#define Warning(...) __Warning(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
+#define Warning(...) xenklib::__Warning(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
 
 static __inline VOID __Trace(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_list Arguments;
@@ -75,7 +77,7 @@ static __inline VOID __Trace(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_end(Arguments);
 }
 
-#define Trace(...) __Trace(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
+#define Trace(...) xenklib::__Trace(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
 #if DBG
 #define DebugTrace(...) Trace(__VA_ARGS__)
 #else
@@ -92,7 +94,7 @@ static __inline VOID __Info(_In_ PCSTR Prefix, _In_ PCSTR Format, ...) {
     va_end(Arguments);
 }
 
-#define Info(...) __Info(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
+#define Info(...) xenklib::__Info(__MODULE__ "|" __FUNCTION__ ": ", __VA_ARGS__)
 #if DBG
 #define DebugInfo(...) Info(__VA_ARGS__)
 #else
@@ -110,3 +112,5 @@ static __inline VOID __DbgPrintEnable(VOID) {
     DBG_PRINT_ENABLE_FILTER(DPFLTR_IHVVIDEO_ID, DPFLTR_TRACE_LEVEL);
     DBG_PRINT_ENABLE_FILTER(DPFLTR_IHVVIDEO_ID, DPFLTR_INFO_LEVEL);
 }
+
+} // namespace xenklib

@@ -59,7 +59,7 @@ EXTERN_C DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_REMOVE
     }
 
     auto device = static_cast<VfbDevice *>(MiniportDeviceContext);
-    TaggedPoolDeleter<VfbDevice, XenvfbTag>{}(device);
+    xenklib::TaggedPoolDeleter<VfbDevice, XenvfbTag>{}(device);
 
     return STATUS_SUCCESS;
 }

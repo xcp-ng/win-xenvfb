@@ -1,6 +1,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/xenbus.hpp>
 
+namespace xenklib {
+
 NTSTATUS StoreHandle::DirectoryTransacted(
     _Out_ StoreString &Result,
     _In_opt_ PXENBUS_STORE_TRANSACTION Transaction,
@@ -17,3 +19,5 @@ NTSTATUS StoreHandle::DirectoryTransacted(
     Result = StoreString(pResult, StoreDeleter(*this));
     return status;
 }
+
+} // namespace xenklib

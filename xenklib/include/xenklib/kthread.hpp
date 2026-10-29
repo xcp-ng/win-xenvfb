@@ -2,6 +2,8 @@
 
 #include <xenklib/common.hpp>
 
+namespace xenklib {
+
 class KThread {
 public:
     explicit KThread();
@@ -34,3 +36,5 @@ private:
     _Interlocked_ LONG _threadAlerted = 0;
     bool _threadJoined = false;
 };
+
+} // namespace xenklib

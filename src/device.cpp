@@ -35,7 +35,7 @@ NTSTATUS VfbDevice::StartDevice(
     }
 
     {
-        StoreHandle storeHandle;
+        xenklib::StoreHandle storeHandle;
         status = _store.Acquire(storeHandle);
         if (!NT_SUCCESS(status)) {
             return status;
@@ -66,26 +66,26 @@ NTSTATUS VfbDevice::StartXen() {
 
     NTSTATUS status;
 
-    DebugInterface debug;
-    status = DebugInterface::Query(debug, _pdo);
+    xenklib::DebugInterface debug;
+    status = xenklib::DebugInterface::Query(debug, _pdo);
     if (!NT_SUCCESS(status)) {
         return status;
     }
 
-    EvtchnInterface evtchn;
-    status = EvtchnInterface::Query(evtchn, _pdo);
+    xenklib::EvtchnInterface evtchn;
+    status = xenklib::EvtchnInterface::Query(evtchn, _pdo);
     if (!NT_SUCCESS(status)) {
         return status;
     }
 
-    StoreInterface store;
-    status = StoreInterface::Query(store, _pdo);
+    xenklib::StoreInterface store;
+    status = xenklib::StoreInterface::Query(store, _pdo);
     if (!NT_SUCCESS(status)) {
         return status;
     }
 
-    SuspendInterface suspend;
-    status = SuspendInterface::Query(suspend, _pdo);
+    xenklib::SuspendInterface suspend;
+    status = xenklib::SuspendInterface::Query(suspend, _pdo);
     if (!NT_SUCCESS(status)) {
         return status;
     }

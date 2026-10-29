@@ -88,7 +88,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) static NTSTATU
     }
 }
 
-VfbFrontend::VfbFrontend(StoreHandle store, ULONG childUid) : _store(wistd::move(store)) {
+VfbFrontend::VfbFrontend(xenklib::StoreHandle store, ULONG childUid) : _store(wistd::move(store)) {
     VfbGetEdid(childUid, _edid);
 }
 

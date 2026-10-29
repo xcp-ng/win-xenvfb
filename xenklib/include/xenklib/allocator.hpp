@@ -3,6 +3,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/type_traits.hpp>
 
+namespace xenklib {
+
 template <typename T, ULONG tag>
 class TaggedPoolDeleter {
 public:
@@ -75,6 +77,8 @@ MakeUniqueTaggedPool(size_t count) {
     E *object = ::new (storage) E[count]();
     return UniqueTaggedPool<T, tag>{object};
 }
+
+} // namespace xenklib
 
 void __cdecl operator delete(void *p);
 void __cdecl operator delete(void *p, size_t s);

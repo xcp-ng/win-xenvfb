@@ -3,6 +3,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/assert.hpp>
 
+namespace xenklib {
+
 // Note: The lock must live in nonpaged memory and outlive every guard.
 class MrswLock {
 public:
@@ -126,3 +128,5 @@ private:
 
 using MrswSharedLockGuard = MrswLock::SharedGuard;
 using MrswExclusiveLockGuard = MrswLock::ExclusiveGuard;
+
+} // namespace xenklib

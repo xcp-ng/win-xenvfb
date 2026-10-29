@@ -7,12 +7,12 @@
 #include <xenklib/mrsw.hpp>
 #include "frontend.hpp"
 
-class VfbFrontendManager : protected KThread {
+class VfbFrontendManager : protected xenklib::KThread {
 public:
     static constexpr size_t MaxViews = 1;
     static constexpr size_t MaxChildren = 1;
 
-    explicit VfbFrontendManager(StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
+    explicit VfbFrontendManager(xenklib::StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
     VfbFrontendManager(const VfbFrontendManager &) = delete;
     VfbFrontendManager &operator=(const VfbFrontendManager &) = delete;
     VfbFrontendManager(VfbFrontendManager &&) = delete;
@@ -54,11 +54,11 @@ protected:
 private:
     NTSTATUS Enumerate();
 
-    StoreHandle _store;
+    xenklib::StoreHandle _store;
     PXENBUS_STORE_WATCH _watch = nullptr;
 
     // Globally locks the frontend list and frontend creation/deletion.
     // Does not lock the VfbFrontend itself!
-    MrswLock _lock;
+    xenklib::MrswLock _lock;
     UniqueVfb<VfbFrontend> _frontends[MaxChildren];
 };

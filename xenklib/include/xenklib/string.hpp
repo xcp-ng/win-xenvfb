@@ -3,6 +3,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/allocator.hpp>
 
+namespace xenklib {
+
 template <typename T>
 struct CharTraits {
     static size_t Length(_In_z_ const T *p) {
@@ -62,3 +64,5 @@ public:
 private:
     UniqueTaggedPool<T[], tag> _buffer;
 };
+
+} // namespace xenklib

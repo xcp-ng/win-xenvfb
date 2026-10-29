@@ -23,7 +23,7 @@ public:
     static constexpr size_t Bpp = 32;
     static constexpr size_t PixelBytes = Bpp / 8;
 
-    explicit VfbFrontend(StoreHandle store, ULONG childUid);
+    explicit VfbFrontend(xenklib::StoreHandle store, ULONG childUid);
 
     DECLSPEC_PAGED_CODE
     _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) static bool IsSizeValid(D3DKMDT_2DREGION size);
@@ -85,6 +85,6 @@ private:
         _In_ const DXGK_VIDPNTARGETMODESET_INTERFACE *modeSetInterface,
         _In_ const D3DKMDT_VIDEO_SIGNAL_INFO &signal);
 
-    StoreHandle _store;
+    xenklib::StoreHandle _store;
     BYTE _edid[128];
 };

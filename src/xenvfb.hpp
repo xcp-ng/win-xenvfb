@@ -18,12 +18,12 @@ extern "C" {
 static constexpr ULONG XenvfbTag = 'bfvX';
 
 template <typename T>
-using UniqueVfb = UniqueTaggedPool<T, XenvfbTag>;
+using UniqueVfb = xenklib::UniqueTaggedPool<T, XenvfbTag>;
 
 template <typename T, typename... Args>
 [[nodiscard]] static inline UniqueVfb<T> MakeUniqueVfb(Args &&...args) {
-    return MakeUniqueTaggedPool<T, XenvfbTag, NonPagedPoolNx, true>(wistd::forward<Args>(args)...);
+    return xenklib::MakeUniqueTaggedPool<T, XenvfbTag, NonPagedPoolNx, true>(wistd::forward<Args>(args)...);
 }
 
-using VfbString = TaggedBasicString<char, XenvfbTag>;
-using VfbWideString = TaggedBasicString<wchar_t, XenvfbTag>;
+using VfbString = xenklib::TaggedBasicString<char, XenvfbTag>;
+using VfbWideString = xenklib::TaggedBasicString<wchar_t, XenvfbTag>;

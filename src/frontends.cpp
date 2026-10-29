@@ -24,7 +24,7 @@ NTSTATUS VfbFrontendManager::Initialize() {
 NTSTATUS VfbFrontendManager::Enumerate() {
     NTSTATUS status;
 
-    StoreString paths = _store.EmptyString();
+    xenklib::StoreString paths = _store.EmptyString();
     status = _store.Directory(paths, "device", "vfb");
     // STATUS_OBJECT_PATH_NOT_FOUND == "this is a leaf"
     // STATUS_OBJECT_NAME_NOT_FOUND == "this does not exist"

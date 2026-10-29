@@ -1,6 +1,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/assert.hpp>
 
+namespace xenklib {
+
 _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS XenQueryInterface(
     _In_ PDEVICE_OBJECT PhysicalDeviceObject,
     _In_ const GUID *Guid,
@@ -57,3 +59,5 @@ fail_build_fsd:
 
     return status;
 }
+
+} // namespace xenklib

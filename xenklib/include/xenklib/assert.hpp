@@ -35,6 +35,8 @@
 #include <xenklib/common.hpp>
 #include <xenklib/dbg_print.hpp>
 
+namespace xenklib {
+
 _Analysis_noreturn_ static DECLSPEC_NORETURN FORCEINLINE VOID __Bug(
     _In_ ULONG Code,
     _In_ ULONG_PTR Parameter1,
@@ -53,7 +55,7 @@ _Analysis_noreturn_ static DECLSPEC_NORETURN FORCEINLINE VOID __Bug(
         ULONG _Line = __LINE__; \
 \
         Error("BUG: " _TEXT "\n"); \
-        __Bug(ASSERTION_FAILURE, (ULONG_PTR)_Text, (ULONG_PTR)_File, (ULONG_PTR)_Line, 0); \
+        xenklib::__Bug(ASSERTION_FAILURE, (ULONG_PTR)_Text, (ULONG_PTR)_File, (ULONG_PTR)_Line, 0); \
     } while (FALSE)
 
 #define BUG_ON(_EXP) \
@@ -164,7 +166,9 @@ static __inline BOOLEAN _IsZeroMemory(_In_ PCSTR Caller, _In_ PCSTR Name, _In_ P
 
 #endif // TEST_MEMORY
 
-#define IsZeroMemory(_Buffer, _Length) _IsZeroMemory(__FUNCTION__, #_Buffer, (_Buffer), (_Length))
+#define IsZeroMemory(_Buffer, _Length) xenklib::_IsZeroMemory(__FUNCTION__, #_Buffer, (_Buffer), (_Length))
 
 #define IMPLY(_X, _Y) (!(_X) || (_Y))
 #define EQUIV(_X, _Y) (IMPLY((_X), (_Y)) && IMPLY((_Y), (_X)))
+
+} // namespace xenklib
