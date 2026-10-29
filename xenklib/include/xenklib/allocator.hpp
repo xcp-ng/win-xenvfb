@@ -76,16 +76,6 @@ MakeUniqueTaggedPool(size_t count) {
     return UniqueTaggedPool<T, tag>{object};
 }
 
-static constexpr ULONG XenvfbTag = 'bfvX';
-
-template <typename T>
-using UniqueVfb = UniqueTaggedPool<T, XenvfbTag>;
-
-template <typename T, typename... Args>
-[[nodiscard]] static inline UniqueVfb<T> MakeUniqueVfb(Args &&...args) {
-    return MakeUniqueTaggedPool<T, XenvfbTag, NonPagedPoolNx, true>(wistd::forward<Args>(args)...);
-}
-
 void __cdecl operator delete(void *p);
 void __cdecl operator delete(void *p, size_t s);
 void __cdecl operator delete[](void *p);

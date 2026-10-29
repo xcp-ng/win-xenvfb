@@ -62,6 +62,3 @@ public:
 private:
     UniqueTaggedPool<T[], tag> _buffer;
 };
-
-using VfbString = TaggedBasicString<char, XenvfbTag>;
-using VfbWideString = TaggedBasicString<wchar_t, XenvfbTag>;

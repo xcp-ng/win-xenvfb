@@ -1,7 +1,7 @@
 #include <xenklib/common.hpp>
 #include <xenklib/assert.hpp>
 
-_IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
+_IRQL_requires_(PASSIVE_LEVEL) NTSTATUS XenQueryInterface(
     _In_ PDEVICE_OBJECT PhysicalDeviceObject,
     _In_ const GUID *Guid,
     _In_ ULONG Version,

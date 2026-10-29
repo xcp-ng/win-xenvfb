@@ -31,6 +31,6 @@ protected:
 
 private:
     PKTHREAD _thread = nullptr;
-    LONG _threadAlerted = 0;
+    _Interlocked_ LONG _threadAlerted = 0;
     bool _threadJoined = false;
 };

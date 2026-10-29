@@ -35,8 +35,6 @@
 
 #include <xenklib/common.hpp>
 
-#define PROJECT xenvfb
-
 #define stringify_literal(_text) #_text
 #define stringify(_text) stringify_literal(_text)
 #define __MODULE__ stringify(PROJECT)
