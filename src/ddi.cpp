@@ -268,7 +268,7 @@ _Function_class_DXGK_(DXGKDDI_STOP_DEVICE_AND_RELEASE_POST_DISPLAY_OWNERSHIP)
     return device->StopDeviceAndReleasePostDisplayOwnership(TargetId, DisplayInfo);
 }
 
-_Check_return_ _Function_class_DXGK_(DXGKDDI_SYSTEM_DISPLAY_ENABLE)
+EXTERN_C _Check_return_ _Function_class_DXGK_(DXGKDDI_SYSTEM_DISPLAY_ENABLE)
 NTSTATUS VfbSystemDisplayEnable(
     _In_ PVOID MiniportDeviceContext,
     _In_ D3DDDI_VIDEO_PRESENT_TARGET_ID TargetId,
@@ -280,7 +280,8 @@ NTSTATUS VfbSystemDisplayEnable(
     return device->SystemDisplayEnable(TargetId, Flags, Width, Height, ColorFormat);
 }
 
-_Function_class_DXGK_(DXGKDDI_SYSTEM_DISPLAY_WRITE) VOID VfbSystemDisplayWrite(
+EXTERN_C _Function_class_DXGK_(DXGKDDI_SYSTEM_DISPLAY_WRITE)
+VOID VfbSystemDisplayWrite(
     _In_ PVOID MiniportDeviceContext,
     _In_reads_bytes_(SourceHeight *SourceStride) PVOID Source,
     _In_ UINT SourceWidth,
@@ -292,7 +293,8 @@ _Function_class_DXGK_(DXGKDDI_SYSTEM_DISPLAY_WRITE) VOID VfbSystemDisplayWrite(
     return device->SystemDisplayWrite(Source, SourceWidth, SourceHeight, SourceStride, PositionX, PositionY);
 }
 
-_Function_class_(DRIVER_INITIALIZE) _IRQL_requires_same_ _IRQL_requires_(PASSIVE_LEVEL)
+EXTERN_C _Function_class_(DRIVER_INITIALIZE)
+_IRQL_requires_same_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
     PAGED_CODE();
 

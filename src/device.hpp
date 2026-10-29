@@ -7,7 +7,7 @@
 
 class VfbDevice {
 public:
-    explicit VfbDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject) : _pdo(PhysicalDeviceObject) {}
+    explicit VfbDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject) noexcept : _pdo(PhysicalDeviceObject) {}
     VfbDevice(const VfbDevice &) = delete;
     VfbDevice &operator=(const VfbDevice &) = delete;
     VfbDevice(VfbDevice &&) = delete;

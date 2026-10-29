@@ -12,7 +12,7 @@ public:
     static constexpr size_t MaxViews = 1;
     static constexpr size_t MaxChildren = 1;
 
-    explicit VfbFrontendManager(StoreHandle &&store) : _store(wistd::move(store)) {}
+    explicit VfbFrontendManager(StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
     VfbFrontendManager(const VfbFrontendManager &) = delete;
     VfbFrontendManager &operator=(const VfbFrontendManager &) = delete;
     VfbFrontendManager(VfbFrontendManager &&) = delete;
