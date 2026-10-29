@@ -1,6 +1,6 @@
 #include <initguid.h>
 
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 extern "C" {
 #include "debug_interface.h"

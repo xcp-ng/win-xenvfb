@@ -1,5 +1,5 @@
-#include "common.hpp"
-#include "allocator.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/allocator.hpp>
 #include "device.hpp"
 
 EXTERN_C DECLSPEC_PAGED_CODE _Check_return_ _Function_class_DXGK_(DXGKDDI_ADD_DEVICE)

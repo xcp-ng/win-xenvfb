@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 template <class T>
 struct is_unbounded_array : wistd::false_type {};

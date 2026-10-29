@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.hpp"
-#include "function_traits.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/function_traits.hpp>
 
 _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     _In_ PDEVICE_OBJECT PhysicalDeviceObject,

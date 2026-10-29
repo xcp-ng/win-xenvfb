@@ -1,8 +1,8 @@
 #pragma once
 
-#include "common.hpp"
-#include "xenbus.hpp"
-#include "allocator.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/xenbus.hpp>
+#include <xenklib/allocator.hpp>
 #include "frontends.hpp"
 
 class VfbDevice {

@@ -1,5 +1,5 @@
+#include <xenklib/xenbus.hpp>
 #include "device.hpp"
-#include "xenbus.hpp"
 #include "frontends.hpp"
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)

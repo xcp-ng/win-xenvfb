@@ -1,11 +1,11 @@
 #pragma once
 
-#include "common.hpp"
-#include "xenbus.hpp"
-#include "kthread.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/xenbus.hpp>
+#include <xenklib/kthread.hpp>
+#include <xenklib/allocator.hpp>
+#include <xenklib/mrsw.hpp>
 #include "frontend.hpp"
-#include "allocator.hpp"
-#include "mrsw.hpp"
 
 class VfbFrontendManager : protected KThread {
 public:

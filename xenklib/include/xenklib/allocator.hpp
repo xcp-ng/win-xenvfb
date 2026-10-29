@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.hpp"
-#include "type_traits.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/type_traits.hpp>
 
 template <typename T, ULONG tag>
 class TaggedPoolDeleter {

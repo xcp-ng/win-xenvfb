@@ -1,6 +1,6 @@
-#include "common.hpp"
-#include "xenbus.hpp"
-#include "dbg_print.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/xenbus.hpp>
+#include <xenklib/dbg_print.hpp>
 #include "frontends.hpp"
 
 NTSTATUS VfbFrontendManager::Initialize() {

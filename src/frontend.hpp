@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.hpp"
-#include "xenbus.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/xenbus.hpp>
 
 // These descriptors are borrowed for the duration of mode enumeration.
 struct VidPnCofuncConstraints {

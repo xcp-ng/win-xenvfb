@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 class KThread {
 public:

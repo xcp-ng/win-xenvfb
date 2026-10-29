@@ -1,5 +1,5 @@
 #pragma once
 
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 void VfbGetEdid(ULONG childUid, BYTE (&edid)[128]);

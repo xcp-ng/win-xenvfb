@@ -1,5 +1,5 @@
-#include "allocator.hpp"
-#include "assert.hpp"
+#include <xenklib/allocator.hpp>
+#include <xenklib/assert.hpp>
 
 // The following deleters should never be called. Allocations should only ever go through our tagged smart pointers.
 // MSVC insists on having these anyway.

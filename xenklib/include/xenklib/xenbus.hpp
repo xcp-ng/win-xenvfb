@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.hpp"
-#include "xen_interface.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/xen_interface.hpp>
 
 extern "C" {
 #include "debug_interface.h"

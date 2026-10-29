@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.hpp"
-#include "allocator.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/allocator.hpp>
 
 template <typename T>
 struct CharTraits {

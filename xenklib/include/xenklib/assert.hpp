@@ -32,8 +32,8 @@
 
 #pragma once
 
-#include "common.hpp"
-#include "dbg_print.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/dbg_print.hpp>
 
 _Analysis_noreturn_ static DECLSPEC_NORETURN FORCEINLINE VOID __Bug(
     _In_ ULONG Code,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 template <typename F>
 struct function_traits {};

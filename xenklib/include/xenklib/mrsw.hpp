@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.hpp"
-#include "assert.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/assert.hpp>
 
 // Note: The lock must live in nonpaged memory and outlive every guard.
 class MrswLock {

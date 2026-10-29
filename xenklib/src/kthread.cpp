@@ -1,6 +1,6 @@
-#include "common.hpp"
-#include "kthread.hpp"
-#include "assert.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/kthread.hpp>
+#include <xenklib/assert.hpp>
 
 EXTERN_C _IRQL_requires_same_ _Function_class_(KSTART_ROUTINE)
 VOID KThreadStartRoutine(_In_ PVOID StartContext) {

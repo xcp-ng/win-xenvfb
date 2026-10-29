@@ -1,4 +1,4 @@
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 static const BYTE EdidTemplate[128] = {
     // header

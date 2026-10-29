@@ -1,5 +1,5 @@
-#include "common.hpp"
-#include "xenbus.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/xenbus.hpp>
 
 NTSTATUS StoreHandle::DirectoryTransacted(
     _Out_ StoreString &Result,

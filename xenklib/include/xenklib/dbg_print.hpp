@@ -33,7 +33,7 @@
 
 #pragma once
 
-#include "common.hpp"
+#include <xenklib/common.hpp>
 
 #define PROJECT xenvfb
 

@@ -89,7 +89,7 @@
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\xenklib\include\;$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(DDK_LIB_PATH)\displib.lib;%(AdditionalDependencies);$(KernelBufferOverflowLib);$(DDK_LIB_PATH)ntoskrnl.lib;$(DDK_LIB_PATH)hal.lib;$(DDK_LIB_PATH)wmilib.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfLdr.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfDriverEntry.lib</AdditionalDependencies>
@@ -102,7 +102,7 @@
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\xenklib\include\;$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(DDK_LIB_PATH)\displib.lib;%(AdditionalDependencies);$(KernelBufferOverflowLib);$(DDK_LIB_PATH)ntoskrnl.lib;$(DDK_LIB_PATH)hal.lib;$(DDK_LIB_PATH)wmilib.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfLdr.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfDriverEntry.lib</AdditionalDependencies>
@@ -115,7 +115,7 @@
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_ARM64_;ARM64;_USE_DECLSPECS_FOR_SAL=1;STD_CALL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\xenklib\include\;$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(DDK_LIB_PATH)\displib.lib;%(AdditionalDependencies);$(KernelBufferOverflowLib);$(DDK_LIB_PATH)ntoskrnl.lib;$(DDK_LIB_PATH)hal.lib;$(DDK_LIB_PATH)wmilib.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfLdr.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfDriverEntry.lib</AdditionalDependencies>
@@ -128,7 +128,7 @@
     <ClCompile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>NOMINMAX;DXGKDDI_INTERFACE_VERSION=DXGKDDI_INTERFACE_VERSION_WIN8;_ARM64_;ARM64;_USE_DECLSPECS_FOR_SAL=1;STD_CALL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\xenklib\include\;$(ProjectDir)..\..\include\;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(DDK_LIB_PATH)\displib.lib;%(AdditionalDependencies);$(KernelBufferOverflowLib);$(DDK_LIB_PATH)ntoskrnl.lib;$(DDK_LIB_PATH)hal.lib;$(DDK_LIB_PATH)wmilib.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfLdr.lib;$(KMDF_LIB_PATH)$(KMDF_VER_PATH)\WdfDriverEntry.lib</AdditionalDependencies>
@@ -141,32 +141,51 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\allocator.cpp" />
     <ClCompile Include="..\..\src\ddi.cpp" />
     <ClCompile Include="..\..\src\device.cpp" />
     <ClCompile Include="..\..\src\edid.cpp" />
     <ClCompile Include="..\..\src\frontend.cpp" />
     <ClCompile Include="..\..\src\frontends.cpp" />
     <ClCompile Include="..\..\src\guids.cpp" />
-    <ClCompile Include="..\..\src\kthread.cpp" />
-    <ClCompile Include="..\..\src\xenbus.cpp" />
-    <ClCompile Include="..\..\src\xen_interface.cpp" />
+    <ClCompile Include="..\..\xenklib\src\allocator.cpp" />
+    <ClCompile Include="..\..\xenklib\src\kthread.cpp" />
+    <ClCompile Include="..\..\xenklib\src\ring.cpp" />
+    <ClCompile Include="..\..\xenklib\src\xenbus.cpp" />
+    <ClCompile Include="..\..\xenklib\src\xen_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\allocator.hpp" />
-    <ClInclude Include="..\..\src\assert.hpp" />
-    <ClInclude Include="..\..\src\common.hpp" />
-    <ClInclude Include="..\..\src\dbg_print.hpp" />
+    <ClInclude Include="..\..\include\debug_interface.h" />
+    <ClInclude Include="..\..\include\evtchn_interface.h" />
+    <ClInclude Include="..\..\include\store_interface.h" />
+    <ClInclude Include="..\..\include\suspend_interface.h" />
+    <ClInclude Include="..\..\include\xen\public\arch-x86\xen-x86_32.h" />
+    <ClInclude Include="..\..\include\xen\public\arch-x86\xen-x86_64.h" />
+    <ClInclude Include="..\..\include\xen\public\arch-x86\xen.h" />
+    <ClInclude Include="..\..\include\xen\public\errno.h" />
+    <ClInclude Include="..\..\include\xen\public\grant_table.h" />
+    <ClInclude Include="..\..\include\xen\public\io\fbif.h" />
+    <ClInclude Include="..\..\include\xen\public\io\ring.h" />
+    <ClInclude Include="..\..\include\xen\public\io\xenbus.h" />
+    <ClInclude Include="..\..\include\xen\public\trace.h" />
+    <ClInclude Include="..\..\include\xen\public\xen-compat.h" />
+    <ClInclude Include="..\..\include\xen\public\xen.h" />
     <ClInclude Include="..\..\src\device.hpp" />
     <ClInclude Include="..\..\src\edid.hpp" />
     <ClInclude Include="..\..\src\frontend.hpp" />
     <ClInclude Include="..\..\src\frontends.hpp" />
-    <ClInclude Include="..\..\src\function_traits.hpp" />
-    <ClInclude Include="..\..\src\kthread.hpp" />
-    <ClInclude Include="..\..\src\mrsw.hpp" />
     <ClInclude Include="..\..\src\vfb.hpp" />
-    <ClInclude Include="..\..\src\xenbus.hpp" />
-    <ClInclude Include="..\..\src\xen_interface.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\allocator.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\assert.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\common.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\dbg_print.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\function_traits.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\kthread.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\mrsw.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\ring.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\string.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\type_traits.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\xenbus.hpp" />
+    <ClInclude Include="..\..\xenklib\include\xenklib\xen_interface.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

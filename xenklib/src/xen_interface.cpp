@@ -1,5 +1,5 @@
-#include "common.hpp"
-#include "assert.hpp"
+#include <xenklib/common.hpp>
+#include <xenklib/assert.hpp>
 
 _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     _In_ PDEVICE_OBJECT PhysicalDeviceObject,
