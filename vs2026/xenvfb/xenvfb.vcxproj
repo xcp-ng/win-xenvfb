@@ -173,7 +173,7 @@
     <ClInclude Include="..\..\src\edid.hpp" />
     <ClInclude Include="..\..\src\frontend.hpp" />
     <ClInclude Include="..\..\src\frontends.hpp" />
-    <ClInclude Include="..\..\src\vfb.hpp" />
+    <ClInclude Include="..\..\src\xenvfb.hpp" />
     <ClInclude Include="..\..\xenklib\include\xenklib\allocator.hpp" />
     <ClInclude Include="..\..\xenklib\include\xenklib\assert.hpp" />
     <ClInclude Include="..\..\xenklib\include\xenklib\common.hpp" />

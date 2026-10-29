@@ -1,6 +1,6 @@
 #include <initguid.h>
 
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 
 extern "C" {
 #include "debug_interface.h"

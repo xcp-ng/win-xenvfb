@@ -1,6 +1,6 @@
 #pragma once
 
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 #include <xenklib/xenbus.hpp>
 
 // These descriptors are borrowed for the duration of mode enumeration.

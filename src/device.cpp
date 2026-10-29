@@ -1,3 +1,4 @@
+#include "xenvfb.hpp"
 #include <xenklib/xenbus.hpp>
 #include "device.hpp"
 #include "frontends.hpp"

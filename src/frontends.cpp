@@ -1,4 +1,4 @@
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 #include <xenklib/xenbus.hpp>
 #include <xenklib/dbg_print.hpp>
 #include "frontends.hpp"

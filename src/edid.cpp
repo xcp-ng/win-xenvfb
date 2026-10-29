@@ -1,4 +1,4 @@
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 
 static const BYTE EdidTemplate[128] = {
     // header

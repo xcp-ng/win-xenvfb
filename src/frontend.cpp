@@ -1,4 +1,4 @@
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 #include "frontend.hpp"
 #include "edid.hpp"
 

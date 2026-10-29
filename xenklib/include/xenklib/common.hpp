@@ -7,8 +7,6 @@
 extern "C" {
 #include <ntifs.h>
 #include <ntintsafe.h>
-
-#include <dispmprt.h>
 }
 
 // attention: most STL headers cannot be used in kernel mode

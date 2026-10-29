@@ -1,6 +1,6 @@
 #pragma once
 
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 #include <xenklib/xenbus.hpp>
 #include <xenklib/allocator.hpp>
 #include "frontends.hpp"

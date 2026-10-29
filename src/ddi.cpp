@@ -1,4 +1,4 @@
-#include <xenklib/common.hpp>
+#include "xenvfb.hpp"
 #include <xenklib/allocator.hpp>
 #include "device.hpp"
 
