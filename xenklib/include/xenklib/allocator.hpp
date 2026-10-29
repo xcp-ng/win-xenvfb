@@ -2,6 +2,7 @@
 
 #include <xenklib/common.hpp>
 #include <xenklib/type_traits.hpp>
+#include <xenklib/assert.hpp>
 
 namespace xenklib {
 
@@ -80,6 +81,20 @@ MakeUniqueTaggedPool(size_t count) {
 
 } // namespace xenklib
 
-void __cdecl operator delete(void *p);
-void __cdecl operator delete(void *p, size_t s);
-void __cdecl operator delete[](void *p);
+// The following deleters should never be called. Allocations should only ever go through our tagged smart pointers.
+// MSVC insists on having these anyway.
+
+#define XENKLIB_DEFINE_NO_DELETE() \
+    void __cdecl operator delete(void *p) { \
+        UNREFERENCED_PARAMETER(p); \
+        BUG("Unexpected call to unused deleter"); \
+    } \
+    void __cdecl operator delete(void *p, size_t size) { \
+        UNREFERENCED_PARAMETER(p); \
+        UNREFERENCED_PARAMETER(size); \
+        BUG("Unexpected call to unused deleter"); \
+    } \
+    void __cdecl operator delete[](void *p) { \
+        UNREFERENCED_PARAMETER(p); \
+        BUG("Unexpected call to unused deleter"); \
+    }
