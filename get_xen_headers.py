@@ -74,7 +74,6 @@ if __name__ == '__main__':
 
     copy_file(working, 'public\\io', 'ring.h')
     copy_file(working, 'public\\io', 'fbif.h')
-    copy_file(working, 'public\\io', 'xenbus.h')
 
     put_branch(working)
 
