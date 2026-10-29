@@ -11,11 +11,11 @@ VOID KThreadStartRoutine(_In_ PVOID StartContext) {
     worker->ThreadWork();
 }
 
-KThread::KThread() noexcept {
+KThread::KThread() {
     KeInitializeEvent(&_threadEvent, NotificationEvent, FALSE);
 }
 
-_IRQL_requires_(PASSIVE_LEVEL) NTSTATUS KThread::ThreadStart() noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) NTSTATUS KThread::ThreadStart() {
     HANDLE Handle;
     NTSTATUS status;
 
@@ -64,7 +64,7 @@ fail_thread:
     return status;
 }
 
-_IRQL_requires_(PASSIVE_LEVEL) void KThread::ThreadJoin() noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) void KThread::ThreadJoin() {
     ASSERT(KeGetCurrentIrql() == PASSIVE_LEVEL);
     ASSERT3P(KeGetCurrentThread(), !=, _thread);
 

@@ -3,7 +3,7 @@
 #include "dbg_print.hpp"
 #include "frontends.hpp"
 
-NTSTATUS VfbFrontendManager::Initialize() noexcept {
+NTSTATUS VfbFrontendManager::Initialize() {
     NTSTATUS status;
 
     status = _store(_store->StoreWatchAdd, const_cast<PSTR>("device"), const_cast<PSTR>("vfb"), &_threadEvent, &_watch);
@@ -21,7 +21,7 @@ NTSTATUS VfbFrontendManager::Initialize() noexcept {
     return STATUS_SUCCESS;
 }
 
-NTSTATUS VfbFrontendManager::Enumerate() noexcept {
+NTSTATUS VfbFrontendManager::Enumerate() {
     NTSTATUS status;
 
     StoreString paths = _store.EmptyString();
@@ -36,7 +36,7 @@ NTSTATUS VfbFrontendManager::Enumerate() noexcept {
     return STATUS_NOT_IMPLEMENTED;
 }
 
-_IRQL_requires_(PASSIVE_LEVEL) void VfbFrontendManager::ThreadWork() noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) void VfbFrontendManager::ThreadWork() {
     while (true) {
         for (;;) {
             Trace("waiting...\n");
@@ -63,7 +63,7 @@ VfbFrontendManager::~VfbFrontendManager() {
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbFrontendManager::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept {
+VfbFrontendManager::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) {
     PAGED_CODE();
 
     auto lock = _lock.AcquireShared();
@@ -80,7 +80,7 @@ NTSTATUS
 VfbFrontendManager::SetPowerState(
     IN_ULONG DeviceUid,
     IN_DEVICE_POWER_STATE DevicePowerState,
-    IN_POWER_ACTION ActionType) noexcept {
+    IN_POWER_ACTION ActionType) {
     PAGED_CODE();
 
     auto lock = _lock.AcquireShared();
@@ -98,7 +98,7 @@ VfbFrontendManager::IsSupportedVidPn(
     INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn,
     _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
     _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
-    _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept {
+    _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) {
     PAGED_CODE();
 
     NTSTATUS status;
@@ -228,7 +228,7 @@ VfbFrontendManager::EnumVidPnCofuncModality(
     IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality,
     _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
     _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
-    _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept {
+    _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) {
     PAGED_CODE();
 
     NTSTATUS status;

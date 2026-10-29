@@ -7,7 +7,7 @@ NTSTATUS VfbDevice::StartDevice(
     IN_PDXGK_START_INFO DxgkStartInfo,
     IN_PDXGKRNL_INTERFACE DxgkInterface,
     OUT_PULONG NumberOfVideoPresentSources,
-    OUT_PULONG NumberOfChildren) noexcept {
+    OUT_PULONG NumberOfChildren) {
     PAGED_CODE();
 
     NTSTATUS status;
@@ -106,7 +106,7 @@ DECLSPEC_PAGED_CODE _IRQL_requires_DXGK_(PASSIVE_LEVEL) void VfbDevice::StopXen(
 }
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
-NTSTATUS VfbDevice::StopDevice() noexcept {
+NTSTATUS VfbDevice::StopDevice() {
     PAGED_CODE();
 
     _started = false;
@@ -119,7 +119,7 @@ NTSTATUS VfbDevice::StopDevice() noexcept {
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::DispatchIoRequest(IN_ULONG VidPnSourceId, IN_PVIDEO_REQUEST_PACKET VideoRequestPacket) noexcept {
+VfbDevice::DispatchIoRequest(IN_ULONG VidPnSourceId, IN_PVIDEO_REQUEST_PACKET VideoRequestPacket) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(VidPnSourceId);
@@ -129,20 +129,20 @@ VfbDevice::DispatchIoRequest(IN_ULONG VidPnSourceId, IN_PVIDEO_REQUEST_PACKET Vi
 }
 
 _Check_return_ _IRQL_requires_DXGK_(HIGH_LEVEL)
-BOOLEAN VfbDevice::InterruptRoutine(IN_ULONG MessageNumber) noexcept {
+BOOLEAN VfbDevice::InterruptRoutine(IN_ULONG MessageNumber) {
     UNREFERENCED_PARAMETER(MessageNumber);
 
     return FALSE;
 }
 
-_IRQL_requires_DXGK_(DISPATCH_LEVEL) VOID VfbDevice::DpcRoutine() noexcept {
+_IRQL_requires_DXGK_(DISPATCH_LEVEL) VOID VfbDevice::DpcRoutine() {
     _dxgk.DxgkCbNotifyDpc(_dxgk.DeviceHandle);
 }
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS VfbDevice::QueryChildRelations(
     _Inout_updates_bytes_(ChildRelationsSize) PDXGK_CHILD_DESCRIPTOR ChildRelations,
-    _In_ ULONG ChildRelationsSize) noexcept {
+    _In_ ULONG ChildRelationsSize) {
     PAGED_CODE();
 
     if (!ChildRelations) {
@@ -178,7 +178,7 @@ NTSTATUS VfbDevice::QueryChildRelations(
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::QueryChildStatus(INOUT_PDXGK_CHILD_STATUS ChildStatus, IN_BOOLEAN NonDestructiveOnly) noexcept {
+VfbDevice::QueryChildStatus(INOUT_PDXGK_CHILD_STATUS ChildStatus, IN_BOOLEAN NonDestructiveOnly) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(NonDestructiveOnly);
@@ -196,7 +196,7 @@ VfbDevice::QueryChildStatus(INOUT_PDXGK_CHILD_STATUS ChildStatus, IN_BOOLEAN Non
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept {
+VfbDevice::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) {
     PAGED_CODE();
 
     return _fm->QueryDeviceDescriptor(ChildUid, DeviceDescriptor);
@@ -204,10 +204,7 @@ VfbDevice::QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTO
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::SetPowerState(
-    IN_ULONG DeviceUid,
-    IN_DEVICE_POWER_STATE DevicePowerState,
-    IN_POWER_ACTION ActionType) noexcept {
+VfbDevice::SetPowerState(IN_ULONG DeviceUid, IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(DeviceUid);
@@ -234,11 +231,11 @@ VfbDevice::SetPowerState(
     return STATUS_SUCCESS;
 }
 
-VOID VfbDevice::ResetDevice() noexcept {}
+VOID VfbDevice::ResetDevice() {}
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::QueryAdapterInfo(IN_CONST_PDXGKARG_QUERYADAPTERINFO pQueryAdapterInfo) noexcept {
+VfbDevice::QueryAdapterInfo(IN_CONST_PDXGKARG_QUERYADAPTERINFO pQueryAdapterInfo) {
     PAGED_CODE();
 
     if (pQueryAdapterInfo->Type != DXGKQAITYPE_DRIVERCAPS) {
@@ -263,7 +260,7 @@ VfbDevice::QueryAdapterInfo(IN_CONST_PDXGKARG_QUERYADAPTERINFO pQueryAdapterInfo
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::SetPointerPosition(IN_CONST_PDXGKARG_SETPOINTERPOSITION pSetPointerPosition) noexcept {
+VfbDevice::SetPointerPosition(IN_CONST_PDXGKARG_SETPOINTERPOSITION pSetPointerPosition) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pSetPointerPosition);
@@ -273,7 +270,7 @@ VfbDevice::SetPointerPosition(IN_CONST_PDXGKARG_SETPOINTERPOSITION pSetPointerPo
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::SetPointerShape(IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape) noexcept {
+VfbDevice::SetPointerShape(IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pSetPointerShape);
@@ -283,7 +280,7 @@ VfbDevice::SetPointerShape(IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape) n
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::IsSupportedVidPn(INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn) noexcept {
+VfbDevice::IsSupportedVidPn(INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn) {
     PAGED_CODE();
 
     NTSTATUS status;
@@ -317,8 +314,7 @@ VfbDevice::IsSupportedVidPn(INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn) n
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::RecommendFunctionalVidPn(
-    IN_CONST_PDXGKARG_RECOMMENDFUNCTIONALVIDPN_CONST pRecommendFunctionalVidPn) noexcept {
+VfbDevice::RecommendFunctionalVidPn(IN_CONST_PDXGKARG_RECOMMENDFUNCTIONALVIDPN_CONST pRecommendFunctionalVidPn) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pRecommendFunctionalVidPn);
@@ -328,7 +324,7 @@ VfbDevice::RecommendFunctionalVidPn(
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::EnumVidPnCofuncModality(IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality) noexcept {
+VfbDevice::EnumVidPnCofuncModality(IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality) {
     PAGED_CODE();
 
     NTSTATUS status;
@@ -361,7 +357,7 @@ VfbDevice::EnumVidPnCofuncModality(IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CON
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::SetVidPnSourceVisibility(IN_CONST_PDXGKARG_SETVIDPNSOURCEVISIBILITY pSetVidPnSourceVisibility) noexcept {
+VfbDevice::SetVidPnSourceVisibility(IN_CONST_PDXGKARG_SETVIDPNSOURCEVISIBILITY pSetVidPnSourceVisibility) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pSetVidPnSourceVisibility);
@@ -371,7 +367,7 @@ VfbDevice::SetVidPnSourceVisibility(IN_CONST_PDXGKARG_SETVIDPNSOURCEVISIBILITY p
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::CommitVidPn(IN_CONST_PDXGKARG_COMMITVIDPN_CONST pCommitVidPn) noexcept {
+VfbDevice::CommitVidPn(IN_CONST_PDXGKARG_COMMITVIDPN_CONST pCommitVidPn) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pCommitVidPn);
@@ -381,7 +377,7 @@ VfbDevice::CommitVidPn(IN_CONST_PDXGKARG_COMMITVIDPN_CONST pCommitVidPn) noexcep
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS VfbDevice::UpdateActiveVidPnPresentPath(
-    IN_CONST_PDXGKARG_UPDATEACTIVEVIDPNPRESENTPATH_CONST pUpdateActiveVidPnPresentPath) noexcept {
+    IN_CONST_PDXGKARG_UPDATEACTIVEVIDPNPRESENTPATH_CONST pUpdateActiveVidPnPresentPath) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pUpdateActiveVidPnPresentPath);
@@ -391,7 +387,7 @@ NTSTATUS VfbDevice::UpdateActiveVidPnPresentPath(
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::RecommendMonitorModes(IN_CONST_PDXGKARG_RECOMMENDMONITORMODES_CONST pRecommendMonitorModes) noexcept {
+VfbDevice::RecommendMonitorModes(IN_CONST_PDXGKARG_RECOMMENDMONITORMODES_CONST pRecommendMonitorModes) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pRecommendMonitorModes);
@@ -401,7 +397,7 @@ VfbDevice::RecommendMonitorModes(IN_CONST_PDXGKARG_RECOMMENDMONITORMODES_CONST p
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::QueryVidPnHWCapability(INOUT_PDXGKARG_QUERYVIDPNHWCAPABILITY io_pVidPnHWCaps) noexcept {
+VfbDevice::QueryVidPnHWCapability(INOUT_PDXGKARG_QUERYVIDPNHWCAPABILITY io_pVidPnHWCaps) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(io_pVidPnHWCaps);
@@ -411,7 +407,7 @@ VfbDevice::QueryVidPnHWCapability(INOUT_PDXGKARG_QUERYVIDPNHWCAPABILITY io_pVidP
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbDevice::PresentDisplayOnly(IN_CONST_PDXGKARG_PRESENT_DISPLAYONLY pPresentDisplayOnly) noexcept {
+VfbDevice::PresentDisplayOnly(IN_CONST_PDXGKARG_PRESENT_DISPLAYONLY pPresentDisplayOnly) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(pPresentDisplayOnly);
@@ -423,7 +419,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
 VfbDevice::StopDeviceAndReleasePostDisplayOwnership(
     _In_ D3DDDI_VIDEO_PRESENT_TARGET_ID TargetId,
-    _Out_ PDXGK_DISPLAY_INFORMATION DisplayInfo) noexcept {
+    _Out_ PDXGK_DISPLAY_INFORMATION DisplayInfo) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(TargetId);
@@ -437,7 +433,7 @@ _Check_return_ NTSTATUS VfbDevice::SystemDisplayEnable(
     _In_ PDXGKARG_SYSTEM_DISPLAY_ENABLE_FLAGS Flags,
     _Out_ UINT *Width,
     _Out_ UINT *Height,
-    _Out_ D3DDDIFORMAT *ColorFormat) noexcept {
+    _Out_ D3DDDIFORMAT *ColorFormat) {
     UNREFERENCED_PARAMETER(TargetId);
     UNREFERENCED_PARAMETER(Flags);
     UNREFERENCED_PARAMETER(Width);
@@ -453,7 +449,7 @@ VOID VfbDevice::SystemDisplayWrite(
     _In_ UINT SourceHeight,
     _In_ UINT SourceStride,
     _In_ UINT PositionX,
-    _In_ UINT PositionY) noexcept {
+    _In_ UINT PositionY) {
     UNREFERENCED_PARAMETER(Source);
     UNREFERENCED_PARAMETER(SourceWidth);
     UNREFERENCED_PARAMETER(SourceHeight);

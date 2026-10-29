@@ -6,7 +6,7 @@
 template <typename T, ULONG tag>
 class TaggedPoolDeleter {
 public:
-    _IRQL_requires_max_(DISPATCH_LEVEL) void operator()(_In_opt_ wistd::remove_extent_t<T> *value) noexcept {
+    _IRQL_requires_max_(DISPATCH_LEVEL) void operator()(_In_opt_ wistd::remove_extent_t<T> *value) {
         if (value) {
             if constexpr (!is_unbounded_array_v<T>) {
                 value->~T();
@@ -21,7 +21,7 @@ using UniqueTaggedPool = wistd::unique_ptr<T, TaggedPoolDeleter<T, tag>>;
 
 template <typename T, ULONG tag, POOL_TYPE poolType = NonPagedPoolNx, bool zeroed = true, typename... Args>
 [[nodiscard]] static inline wistd::enable_if_t<!wistd::is_array_v<T>, UniqueTaggedPool<T, tag>>
-MakeUniqueTaggedPool(Args &&...args) noexcept {
+MakeUniqueTaggedPool(Args &&...args) {
     static_assert(tag != 0, "Pool tag cannot be 0");
     static_assert(alignof(T) <= MEMORY_ALLOCATION_ALIGNMENT, "Type alignment is too large");
     static_assert(wistd::is_nothrow_constructible_v<T, Args &&...>, "Constructor must be nothrow");
@@ -43,7 +43,7 @@ MakeUniqueTaggedPool(Args &&...args) noexcept {
 
 template <typename T, ULONG tag, POOL_TYPE poolType = NonPagedPoolNx, bool zeroed = true, typename... Args>
 [[nodiscard]] static inline wistd::enable_if_t<is_unbounded_array_v<T>, UniqueTaggedPool<T, tag>>
-MakeUniqueTaggedPool(size_t count) noexcept {
+MakeUniqueTaggedPool(size_t count) {
     using E = wistd::remove_extent_t<T>;
 
     static_assert(tag != 0, "Pool tag cannot be 0");

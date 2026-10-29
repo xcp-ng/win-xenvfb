@@ -48,7 +48,7 @@ static const D3DKMDT_2DREGION SupportedResolutions[] = {
 // Dataset-empty/end statuses are informational but supply no new descriptor.
 template <typename TMode, typename TModeSet, typename TModeSetInterface, typename TCallback>
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) static NTSTATUS
-    ForEachMode(TModeSet modeSet, const TModeSetInterface *modeSetInterface, TCallback &&callback) noexcept {
+    ForEachMode(TModeSet modeSet, const TModeSetInterface *modeSetInterface, TCallback &&callback) {
     PAGED_CODE();
 
     const TMode *mode = nullptr;
@@ -88,12 +88,11 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) static NTSTATU
     }
 }
 
-VfbFrontend::VfbFrontend(StoreHandle store, ULONG childUid) noexcept : _store(wistd::move(store)) {
+VfbFrontend::VfbFrontend(StoreHandle store, ULONG childUid) : _store(wistd::move(store)) {
     VfbGetEdid(childUid, _edid);
 }
 
-DECLSPEC_PAGED_CODE _Check_return_
-_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsSizeValid(D3DKMDT_2DREGION size) noexcept {
+DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsSizeValid(D3DKMDT_2DREGION size) {
     PAGED_CODE();
 
     if (size.cx < 640 || size.cy < 480 || static_cast<UINT64>(size.cx) * PixelBytes > MAXULONG) {
@@ -105,7 +104,7 @@ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsSizeValid(D3DKMDT_2DREGION si
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbFrontend::QueryDeviceDescriptor(INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept {
+VfbFrontend::QueryDeviceDescriptor(INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) {
     PAGED_CODE();
 
     if (DeviceDescriptor->DescriptorOffset >= sizeof(_edid)) {
@@ -123,7 +122,7 @@ VfbFrontend::QueryDeviceDescriptor(INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescripto
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL)
 NTSTATUS
-VfbFrontend::SetPowerState(IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType) noexcept {
+VfbFrontend::SetPowerState(IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType) {
     PAGED_CODE();
 
     UNREFERENCED_PARAMETER(DevicePowerState);
@@ -133,7 +132,7 @@ VfbFrontend::SetPowerState(IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTI
 }
 
 DECLSPEC_PAGED_CODE _Check_return_
-_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsPathSupported(const D3DKMDT_VIDPN_PRESENT_PATH &path) noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsPathSupported(const D3DKMDT_VIDPN_PRESENT_PATH &path) {
     PAGED_CODE();
 
     switch (path.ContentTransformation.Scaling) {
@@ -168,7 +167,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS VfbFrontend::PrepareCofuncPath(
     _Inout_ D3DKMDT_VIDPN_PRESENT_PATH &path,
     _In_ const DXGKARG_ENUMVIDPNCOFUNCMODALITY &enumeration,
-    _Out_ bool *supportFieldsModified) noexcept {
+    _Out_ bool *supportFieldsModified) {
     PAGED_CODE();
 
     *supportFieldsModified = false;
@@ -195,7 +194,7 @@ NTSTATUS VfbFrontend::PrepareCofuncPath(
 // DDI requirement: modes must work with the path transformations. When a
 // transformation is the pivot, its unchanged support flags can rule out identity.
 DECLSPEC_PAGED_CODE _Check_return_
-_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::PathAllowsIdentity(const D3DKMDT_VIDPN_PRESENT_PATH &path) noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::PathAllowsIdentity(const D3DKMDT_VIDPN_PRESENT_PATH &path) {
     PAGED_CODE();
 
     switch (path.ContentTransformation.Scaling) {
@@ -227,7 +226,7 @@ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::PathAllowsIdentity(const D3DKMD
 // A preserved pivot may contain modes that our framebuffer cannot use. Matching
 // its dimensions alone is insufficient: the matching source must also be usable.
 DECLSPEC_PAGED_CODE _Check_return_
-_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsSourceModeSupported(const D3DKMDT_VIDPN_SOURCE_MODE &mode) noexcept {
+_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsSourceModeSupported(const D3DKMDT_VIDPN_SOURCE_MODE &mode) {
     PAGED_CODE();
 
     if (mode.Type != D3DKMDT_RMT_GRAPHICS) {
@@ -243,8 +242,8 @@ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsSourceModeSupported(const D3D
         graphics.PixelValueAccessMode == D3DKMDT_PVAM_DIRECT;
 }
 
-DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsTargetSignalSupported(
-    const D3DKMDT_VIDEO_SIGNAL_INFO &signal) noexcept {
+DECLSPEC_PAGED_CODE _Check_return_
+_IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::IsTargetSignalSupported(const D3DKMDT_VIDEO_SIGNAL_INFO &signal) {
     PAGED_CODE();
 
     return IsSizeValid(signal.ActiveSize) && signal.TotalSize.cx == signal.ActiveSize.cx &&
@@ -253,7 +252,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFronte
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) bool VfbFrontend::AreModesCompatible(
     _In_opt_ const D3DKMDT_VIDPN_SOURCE_MODE *sourceMode,
-    _In_opt_ const D3DKMDT_VIDPN_TARGET_MODE *targetMode) noexcept {
+    _In_opt_ const D3DKMDT_VIDPN_TARGET_MODE *targetMode) {
     PAGED_CODE();
 
     if (sourceMode && !IsSourceModeSupported(*sourceMode)) {
@@ -278,7 +277,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS VfbFrontend::AddSourceModeForSize(
     _In_ D3DKMDT_HVIDPNSOURCEMODESET modeSet,
     _In_ const DXGK_VIDPNSOURCEMODESET_INTERFACE *modeSetInterface,
-    _In_ const D3DKMDT_2DREGION &size) noexcept {
+    _In_ const D3DKMDT_2DREGION &size) {
     PAGED_CODE();
 
     NTSTATUS status;
@@ -326,7 +325,7 @@ DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS VfbFrontend::AddTargetModeForSignal(
     _In_ D3DKMDT_HVIDPNTARGETMODESET modeSet,
     _In_ const DXGK_VIDPNTARGETMODESET_INTERFACE *modeSetInterface,
-    _In_ const D3DKMDT_VIDEO_SIGNAL_INFO &signal) noexcept {
+    _In_ const D3DKMDT_VIDEO_SIGNAL_INFO &signal) {
     PAGED_CODE();
 
     NTSTATUS status;
@@ -366,9 +365,7 @@ NTSTATUS VfbFrontend::AddTargetModeForSignal(
 
 DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL)
 NTSTATUS
-VfbFrontend::BuildTargetSignalInfo(
-    _In_ const D3DKMDT_2DREGION &size,
-    _Out_ D3DKMDT_VIDEO_SIGNAL_INFO *signal) noexcept {
+VfbFrontend::BuildTargetSignalInfo(_In_ const D3DKMDT_2DREGION &size, _Out_ D3DKMDT_VIDEO_SIGNAL_INFO *signal) {
     PAGED_CODE();
 
     *signal = {};
@@ -393,7 +390,7 @@ NTSTATUS
 VfbFrontend::AddSourceModes(
     _In_ D3DKMDT_HVIDPNSOURCEMODESET newSourceModeSet,
     _In_ const DXGK_VIDPNSOURCEMODESET_INTERFACE *newSourceModeSetInterface,
-    _In_ const VidPnCofuncConstraints &constraints) noexcept {
+    _In_ const VidPnCofuncConstraints &constraints) {
     PAGED_CODE();
 
     ASSERT(!constraints.PinnedSourceMode && !constraints.SourceIsPivot);
@@ -479,7 +476,7 @@ NTSTATUS
 VfbFrontend::AddTargetModes(
     _In_ D3DKMDT_HVIDPNTARGETMODESET newTargetModeSet,
     _In_ const DXGK_VIDPNTARGETMODESET_INTERFACE *newTargetModeSetInterface,
-    _In_ const VidPnCofuncConstraints &constraints) noexcept {
+    _In_ const VidPnCofuncConstraints &constraints) {
     PAGED_CODE();
 
     ASSERT(!constraints.PinnedTargetMode && !constraints.TargetIsPivot);

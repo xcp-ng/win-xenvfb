@@ -7,7 +7,7 @@
 
 class VfbDevice {
 public:
-    explicit VfbDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject) noexcept : _pdo(PhysicalDeviceObject) {}
+    explicit VfbDevice(IN_CONST_PDEVICE_OBJECT PhysicalDeviceObject) : _pdo(PhysicalDeviceObject) {}
     VfbDevice(const VfbDevice &) = delete;
     VfbDevice &operator=(const VfbDevice &) = delete;
     VfbDevice(VfbDevice &&) = delete;
@@ -18,7 +18,7 @@ public:
         IN_PDXGK_START_INFO DxgkStartInfo,
         IN_PDXGKRNL_INTERFACE DxgkInterface,
         OUT_PULONG NumberOfVideoPresentSources,
-        OUT_PULONG NumberOfChildren) noexcept;
+        OUT_PULONG NumberOfChildren);
 
     // startup sequence
     void StartDxgk(IN_PDXGKRNL_INTERFACE DxgkInterface) {
@@ -30,75 +30,75 @@ public:
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS StartXen();
     DECLSPEC_PAGED_CODE _IRQL_requires_DXGK_(PASSIVE_LEVEL) void StopXen();
 
-    DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS StopDevice() noexcept;
+    DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS StopDevice();
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
-        DispatchIoRequest(IN_ULONG VidPnSourceId, IN_PVIDEO_REQUEST_PACKET VideoRequestPacket) noexcept;
+        DispatchIoRequest(IN_ULONG VidPnSourceId, IN_PVIDEO_REQUEST_PACKET VideoRequestPacket);
 
-    _Check_return_ _IRQL_requires_DXGK_(HIGH_LEVEL) BOOLEAN InterruptRoutine(IN_ULONG MessageNumber) noexcept;
+    _Check_return_ _IRQL_requires_DXGK_(HIGH_LEVEL) BOOLEAN InterruptRoutine(IN_ULONG MessageNumber);
 
-    _IRQL_requires_DXGK_(DISPATCH_LEVEL) VOID DpcRoutine() noexcept;
+    _IRQL_requires_DXGK_(DISPATCH_LEVEL) VOID DpcRoutine();
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS QueryChildRelations(
         _Inout_updates_bytes_(ChildRelationsSize) PDXGK_CHILD_DESCRIPTOR ChildRelations,
-        _In_ ULONG ChildRelationsSize) noexcept;
+        _In_ ULONG ChildRelationsSize);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
-        QueryChildStatus(INOUT_PDXGK_CHILD_STATUS ChildStatus, IN_BOOLEAN NonDestructiveOnly) noexcept;
+        QueryChildStatus(INOUT_PDXGK_CHILD_STATUS ChildStatus, IN_BOOLEAN NonDestructiveOnly);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
-        QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept;
+        QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
-        SetPowerState(IN_ULONG DeviceUid, IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType) noexcept;
+        SetPowerState(IN_ULONG DeviceUid, IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        QueryAdapterInfo(IN_CONST_PDXGKARG_QUERYADAPTERINFO pQueryAdapterInfo) noexcept;
+        QueryAdapterInfo(IN_CONST_PDXGKARG_QUERYADAPTERINFO pQueryAdapterInfo);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        SetPointerPosition(IN_CONST_PDXGKARG_SETPOINTERPOSITION pSetPointerPosition) noexcept;
+        SetPointerPosition(IN_CONST_PDXGKARG_SETPOINTERPOSITION pSetPointerPosition);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        SetPointerShape(IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape) noexcept;
+        SetPointerShape(IN_CONST_PDXGKARG_SETPOINTERSHAPE pSetPointerShape);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        IsSupportedVidPn(INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn) noexcept;
+        IsSupportedVidPn(INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        RecommendFunctionalVidPn(IN_CONST_PDXGKARG_RECOMMENDFUNCTIONALVIDPN_CONST pRecommendFunctionalVidPn) noexcept;
+        RecommendFunctionalVidPn(IN_CONST_PDXGKARG_RECOMMENDFUNCTIONALVIDPN_CONST pRecommendFunctionalVidPn);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        EnumVidPnCofuncModality(IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality) noexcept;
+        EnumVidPnCofuncModality(IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        SetVidPnSourceVisibility(IN_CONST_PDXGKARG_SETVIDPNSOURCEVISIBILITY pSetVidPnSourceVisibility) noexcept;
+        SetVidPnSourceVisibility(IN_CONST_PDXGKARG_SETVIDPNSOURCEVISIBILITY pSetVidPnSourceVisibility);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        CommitVidPn(IN_CONST_PDXGKARG_COMMITVIDPN_CONST pCommitVidPn) noexcept;
+        CommitVidPn(IN_CONST_PDXGKARG_COMMITVIDPN_CONST pCommitVidPn);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS UpdateActiveVidPnPresentPath(
-        IN_CONST_PDXGKARG_UPDATEACTIVEVIDPNPRESENTPATH_CONST pUpdateActiveVidPnPresentPath) noexcept;
+        IN_CONST_PDXGKARG_UPDATEACTIVEVIDPNPRESENTPATH_CONST pUpdateActiveVidPnPresentPath);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        RecommendMonitorModes(IN_CONST_PDXGKARG_RECOMMENDMONITORMODES_CONST pRecommendMonitorModes) noexcept;
+        RecommendMonitorModes(IN_CONST_PDXGKARG_RECOMMENDMONITORMODES_CONST pRecommendMonitorModes);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        QueryVidPnHWCapability(INOUT_PDXGKARG_QUERYVIDPNHWCAPABILITY io_pVidPnHWCaps) noexcept;
+        QueryVidPnHWCapability(INOUT_PDXGKARG_QUERYVIDPNHWCAPABILITY io_pVidPnHWCaps);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS
-        PresentDisplayOnly(IN_CONST_PDXGKARG_PRESENT_DISPLAYONLY pPresentDisplayOnly) noexcept;
+        PresentDisplayOnly(IN_CONST_PDXGKARG_PRESENT_DISPLAYONLY pPresentDisplayOnly);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
         StopDeviceAndReleasePostDisplayOwnership(
             _In_ D3DDDI_VIDEO_PRESENT_TARGET_ID TargetId,
-            _Out_ PDXGK_DISPLAY_INFORMATION DisplayInfo) noexcept;
+            _Out_ PDXGK_DISPLAY_INFORMATION DisplayInfo);
 
     _Check_return_ NTSTATUS SystemDisplayEnable(
         _In_ D3DDDI_VIDEO_PRESENT_TARGET_ID TargetId,
         _In_ PDXGKARG_SYSTEM_DISPLAY_ENABLE_FLAGS Flags,
         _Out_ UINT *Width,
         _Out_ UINT *Height,
-        _Out_ D3DDDIFORMAT *ColorFormat) noexcept;
+        _Out_ D3DDDIFORMAT *ColorFormat);
 
     VOID SystemDisplayWrite(
         _In_reads_bytes_(SourceHeight *SourceStride) PVOID Source,
@@ -106,9 +106,9 @@ public:
         _In_ UINT SourceHeight,
         _In_ UINT SourceStride,
         _In_ UINT PositionX,
-        _In_ UINT PositionY) noexcept;
+        _In_ UINT PositionY);
 
-    VOID ResetDevice() noexcept;
+    VOID ResetDevice();
 
 private:
     const PDEVICE_OBJECT _pdo = nullptr;

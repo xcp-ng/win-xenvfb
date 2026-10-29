@@ -6,7 +6,7 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     _In_ const GUID *Guid,
     _In_ ULONG Version,
     _Out_ PINTERFACE Interface,
-    _In_ ULONG Size) noexcept {
+    _In_ ULONG Size) {
     KEVENT Event;
     IO_STATUS_BLOCK StatusBlock;
     PIRP Irp;

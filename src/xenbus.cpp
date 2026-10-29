@@ -5,7 +5,7 @@ NTSTATUS StoreHandle::DirectoryTransacted(
     _Out_ StoreString &Result,
     _In_opt_ PXENBUS_STORE_TRANSACTION Transaction,
     _In_opt_ PCSTR Prefix,
-    _In_ PCSTR Node) noexcept {
+    _In_ PCSTR Node) {
     PSTR pResult = nullptr;
     NTSTATUS status;
 

@@ -22,7 +22,7 @@ public:
             }
         }
 
-        explicit operator bool() const noexcept {
+        explicit operator bool() const {
             return _lock != nullptr;
         }
 
@@ -30,7 +30,7 @@ public:
         friend class MrswLock;
         friend class ExclusiveGuard;
 
-        explicit SharedGuard(MrswLock *lock) noexcept : _lock(lock) {}
+        explicit SharedGuard(MrswLock *lock) : _lock(lock) {}
 
         MrswLock *_lock;
     };
@@ -50,11 +50,11 @@ public:
             }
         }
 
-        explicit operator bool() const noexcept {
+        explicit operator bool() const {
             return _lock != nullptr;
         }
 
-        [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) SharedGuard Downgrade() noexcept {
+        [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) SharedGuard Downgrade() {
             BUG_ON(!_lock);
 
             auto lock = _lock;
@@ -68,12 +68,12 @@ public:
     private:
         friend class MrswLock;
 
-        explicit ExclusiveGuard(MrswLock *lock) noexcept : _lock(lock) {}
+        explicit ExclusiveGuard(MrswLock *lock) : _lock(lock) {}
 
         MrswLock *_lock;
     };
 
-    _IRQL_requires_max_(APC_LEVEL) MrswLock() noexcept {
+    _IRQL_requires_max_(APC_LEVEL) MrswLock() {
         KeInitializeGuardedMutex(&_mutex);
         ExInitializeRundownProtection(&_rundown);
     }
@@ -92,7 +92,7 @@ public:
 #endif
     }
 
-    [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) SharedGuard AcquireShared() noexcept {
+    [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) SharedGuard AcquireShared() {
         ASSERT3U(KeGetCurrentIrql(), <=, APC_LEVEL);
 
         if (ExAcquireRundownProtection(&_rundown)) {
@@ -105,12 +105,12 @@ public:
         return SharedGuard(this);
     }
 
-    [[nodiscard]] _IRQL_requires_max_(DISPATCH_LEVEL) SharedGuard TryAcquireShared() noexcept {
+    [[nodiscard]] _IRQL_requires_max_(DISPATCH_LEVEL) SharedGuard TryAcquireShared() {
         ASSERT3U(KeGetCurrentIrql(), <=, DISPATCH_LEVEL);
         return SharedGuard(ExAcquireRundownProtection(&_rundown) ? this : nullptr);
     }
 
-    [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) ExclusiveGuard AcquireExclusive() noexcept {
+    [[nodiscard]] _IRQL_requires_max_(APC_LEVEL) ExclusiveGuard AcquireExclusive() {
         ASSERT3U(KeGetCurrentIrql(), <=, APC_LEVEL);
 
         KeAcquireGuardedMutex(&_mutex);

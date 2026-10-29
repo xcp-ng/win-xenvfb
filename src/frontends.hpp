@@ -12,14 +12,14 @@ public:
     static constexpr size_t MaxViews = 1;
     static constexpr size_t MaxChildren = 1;
 
-    explicit VfbFrontendManager(StoreHandle &&store) noexcept : _store(wistd::move(store)) {}
+    explicit VfbFrontendManager(StoreHandle &&store) : _store(wistd::move(store)) {}
     VfbFrontendManager(const VfbFrontendManager &) = delete;
     VfbFrontendManager &operator=(const VfbFrontendManager &) = delete;
     VfbFrontendManager(VfbFrontendManager &&) = delete;
     VfbFrontendManager &operator=(VfbFrontendManager &&) = delete;
     ~VfbFrontendManager();
 
-    NTSTATUS Initialize() noexcept;
+    NTSTATUS Initialize();
 
     _IRQL_requires_max_(APC_LEVEL) bool HasChild(ULONG uid) {
         auto lock = _lock.AcquireShared();
@@ -30,29 +30,29 @@ public:
     }
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
-        QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor) noexcept;
+        QueryDeviceDescriptor(IN_ULONG ChildUid, INOUT_PDXGK_DEVICE_DESCRIPTOR DeviceDescriptor);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_DXGK_(PASSIVE_LEVEL) NTSTATUS
-        SetPowerState(IN_ULONG DeviceUid, IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType) noexcept;
+        SetPowerState(IN_ULONG DeviceUid, IN_DEVICE_POWER_STATE DevicePowerState, IN_POWER_ACTION ActionType);
 
     DECLSPEC_PAGED_CODE _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS IsSupportedVidPn(
         INOUT_PDXGKARG_ISSUPPORTEDVIDPN pIsSupportedVidPn,
         _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
         _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
-        _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
+        _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface);
 
     DECLSPEC_PAGED_CODE
     _Check_return_ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS EnumVidPnCofuncModality(
         IN_CONST_PDXGKARG_ENUMVIDPNCOFUNCMODALITY_CONST pEnumCofuncModality,
         _In_ const DXGK_VIDPN_INTERFACE *vidPnInterface,
         _In_ D3DKMDT_HVIDPNTOPOLOGY vidPnTopology,
-        _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface) noexcept;
+        _In_ const DXGK_VIDPNTOPOLOGY_INTERFACE *vidPnTopologyInterface);
 
 protected:
-    _IRQL_requires_(PASSIVE_LEVEL) virtual void ThreadWork() noexcept override;
+    _IRQL_requires_(PASSIVE_LEVEL) virtual void ThreadWork() override;
 
 private:
-    NTSTATUS Enumerate() noexcept;
+    NTSTATUS Enumerate();
 
     StoreHandle _store;
     PXENBUS_STORE_WATCH _watch = nullptr;

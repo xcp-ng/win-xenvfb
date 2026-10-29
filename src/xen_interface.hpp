@@ -8,7 +8,7 @@ _IRQL_requires_(PASSIVE_LEVEL) NTSTATUS VfbQueryInterface(
     _In_ const GUID *Guid,
     _In_ ULONG Version,
     _Out_ PINTERFACE Interface,
-    _In_ ULONG Size) noexcept;
+    _In_ ULONG Size);
 
 template <typename T>
 struct XenTraits;
@@ -29,7 +29,7 @@ class XenHandle;
 template <XenInterfaceType I>
 class XenInterface {
 public:
-    explicit XenInterface() noexcept {}
+    explicit XenInterface() {}
     XenInterface(const XenInterface &other) = delete;
     XenInterface &operator=(const XenInterface &other) = delete;
     XenInterface(XenInterface &&other) noexcept {
@@ -42,14 +42,14 @@ public:
         }
         return *this;
     }
-    ~XenInterface() noexcept {
+    ~XenInterface() {
         dispose();
     }
 
     operator bool() const {
         return _valid;
     }
-    void Reset() noexcept {
+    void Reset() {
         dispose();
     }
 
@@ -75,7 +75,7 @@ public:
 
     template <typename H>
         requires requires(I &data) {
-            { H(data, true) } noexcept;
+            { H(data, true) };
         }
     NTSTATUS Acquire(H &Result) {
         if (!_valid) {
@@ -91,7 +91,7 @@ public:
         return Status;
     }
 
-    friend void swap(XenInterface &self, XenInterface &other) noexcept {
+    friend void swap(XenInterface &self, XenInterface &other) {
         self._data = wistd::exchange(other._data, self._data);
         self._valid = wistd::exchange(other._valid, self._valid);
     }
@@ -100,7 +100,7 @@ private:
     I _data{};
     bool _valid = false;
 
-    void dispose() noexcept {
+    void dispose() {
         if (wistd::exchange(_valid, false)) {
             if (_data.Interface.InterfaceDereference) {
                 _data.Interface.InterfaceDereference(_data.Interface.Context);
@@ -114,7 +114,7 @@ private:
 template <XenInterfaceType I>
 class XenHandle {
 public:
-    explicit XenHandle() noexcept {}
+    explicit XenHandle() {}
     XenHandle(const XenHandle &other) = delete;
     XenHandle &operator=(const XenHandle &other) = delete;
     XenHandle(XenHandle &&other) noexcept {
@@ -127,21 +127,21 @@ public:
         }
         return *this;
     }
-    ~XenHandle() noexcept {
+    ~XenHandle() {
         dispose();
     }
 
     operator bool() const {
         return _valid;
     }
-    void Reset() noexcept {
+    void Reset() {
         dispose();
     }
 
-    I &operator*() noexcept {
+    I &operator*() {
         return _data;
     }
-    I *operator->() noexcept {
+    I *operator->() {
         return &_data;
     }
 
@@ -150,19 +150,19 @@ public:
         return method(&_data.Interface, wistd::forward<Args>(args)...);
     }
 
-    friend void swap(XenHandle &self, XenHandle &other) noexcept {
+    friend void swap(XenHandle &self, XenHandle &other) {
         self._data = wistd::exchange(other._data, self._data);
         self._valid = wistd::exchange(other._valid, self._valid);
     }
 
 protected:
     friend class XenInterface<I>;
-    XenHandle(I data, bool valid) noexcept : _data(data), _valid(valid) {}
+    XenHandle(I data, bool valid) : _data(data), _valid(valid) {}
 
     I _data{};
     bool _valid = false;
 
-    void dispose() noexcept {
+    void dispose() {
         if (wistd::exchange(_valid, false)) {
             XenTraits<I>::Release(_data);
             _data = {};
